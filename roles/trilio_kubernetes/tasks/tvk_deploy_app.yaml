@@ -13,15 +13,13 @@
   block:
   - name: Create App in {{ tvk_namespace }}
     kubernetes.core.k8s:
-      # api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
-      state: present # State=present when you need to create new object
-      namespace: "{{ tvk_namespace }}" # namespace for the secret
+      state: present
+      namespace: "{{ tvk_namespace }}"
       validate_certs: false
       src: "{{ tvk_demo_app_yaml }}"
       wait: true
     register: app_deployment
 
-  # TODO: if not using kubeconfig auth, how to do kubectl?
   - name: Application Deployment in the {{ tvk_namespace }} namespace (kubeconfig)
     ansible.builtin.shell: >
       kubectl get po,pvc,svc -n {{ tvk_namespace }}
