@@ -1,7 +1,35 @@
 # Collection: trilio.trilio_kubernetes
 Set of Ansible Roles and Playbooks for Trilio Cloud-Native Intelligent Recovery products
 
+# Using this collection
+You can install this collection using the ansible-galaxy tool:
+
+```bash
+ansible-galaxy collection install trilio.trilio_kubernetes
+```
+
+You can also include it in a requirements.yml file and install it via ansible-galaxy collection install -r requirements.yml using the format:
+
+```yaml
+collections:
+- name: trilio.trilio_kubernetes
+```
+
+Note that if you install the collection manually, it will not be upgraded automatically when you upgrade the Ansible package. To upgrade the collection to the latest available version, run the following command:
+
+```bash
+ansible-galaxy collection install trilio.trilio_kubernetes --upgrade
+```
+
+You can also install a specific version of the collection, for example, if you need to downgrade when something is broken in the latest version (please report an issue in this repository). Use the following syntax where X.Y.Z can be any available version:
+
+```bash
+ansible-galaxy collection install trilio.trilio_kubernetes:==X.Y.Z
+```
+
 # Examples
+Example playbook can be found in the playbooks directory of the collection. It includes the Playbook called tvk-utility.yaml, and example configuration files. tvk-config.yaml is always referenced. You can override any values with extra configuration files, such as the content from -e @backup-config.yaml.
+
 
 ``` bash
 ansible-playbook -e @secrets.enc -e @auth.enc --vault-ask-pass tvk-utility.yaml
