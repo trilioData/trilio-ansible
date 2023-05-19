@@ -4,5 +4,5 @@
 
 - name: Create Backup
   ansible.builtin.include_tasks: "tvk_create_backup_{{ k8s_auth_type }}.yaml"
-  when: tvk_create_backup | bool
   tags: ['backup', 'smoketest']
+  when: tvk_create_backup | bool

@@ -19,15 +19,16 @@
   tags: ['check', 'smoketest']
 
 - name: Basic OpenShift Checks
+  tags: ['check', 'smoketest']
   block:
   - name: Check for oc
     stat:
       path: /usr/local/bin/oc
     register: oc
-  tags: ['check', 'smoketest']
   when: k8s_distro == "openshift"
 
 - name: Trilio for Kubernetes Prerequisite Checks
+  tags: ['check', 'smoketest']
   block:
   - name: Checking for Trilio License
     kubernetes.core.k8s_info:
@@ -115,7 +116,5 @@
 
   rescue:
   - name: Warn user on TVK errors
-    ansible.builtin.debug:
+    ansible.builtin.ansible.builtin.debug:
       msg: 'Unable to perform TVK checks'
-
-  tags: ['check', 'smoketest']

@@ -5,5 +5,5 @@
 
 - name: Create Backup Plan
   ansible.builtin.include_tasks: "tvk_create_backupplan_{{ k8s_auth_type }}.yaml"
-  when: tvk_create_backupplan | bool
   tags: ['backupplan', 'smoketest']
+  when: tvk_create_backupplan | bool

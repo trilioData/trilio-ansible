@@ -3,6 +3,7 @@
 # Authors: Kevin Jackson <kevin.jackson at trilio io>
 
 - name: Perform Restore
+  tags: ['restore', 'smoketest']
   block:
   - name: Create Restore Namespace
     ansible.builtin.include_tasks: "tvk_create_ns_{{ k8s_auth_type }}.yaml"
@@ -13,4 +14,3 @@
   - name: Execute Restore Tasks
     ansible.builtin.include_tasks: "tvk_create_restore_{{ k8s_auth_type }}.yaml"
     when: tvk_create_restore | bool
-  tags: ['restore', 'smoketest']

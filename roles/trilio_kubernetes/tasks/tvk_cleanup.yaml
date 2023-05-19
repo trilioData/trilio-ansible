@@ -36,7 +36,7 @@
     register: backup_list
 
   - name: List of Backups that will be removed
-    debug:
+    ansible.builtin.debug:
       msg: "backup_list: {{ backup_list | json_query('resources[*].metadata.name')  }} "
 
   - name: Removing all Backups from {{ tvk_namespace }}
@@ -60,6 +60,5 @@
       kind: Namespace
       validate_certs: false
       state: absent
-
   when:
   - tvk_cleanup | bool
