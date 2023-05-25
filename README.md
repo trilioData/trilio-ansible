@@ -30,7 +30,28 @@ You can also install a specific version of the collection, for example, if you n
 ansible-galaxy collection install trilio.trilio_kubernetes:==X.Y.Z
 ```
 
-# Examples
+# Usage
+There are tasks created to do the following
+- Check prerequisites required to operator Trilio for Kubernetes
+- Create a namespace (for OpenShift you optionally can set a default SCC to ensure application can run sucessfully)
+- Deploy a test application 
+- Create a secret (for S3 based targets)
+- Create a target (a target is where backups will be stored: S3 or NFS based)
+- Create a backup plan (a backup plan describes what top backup. Selection is namespace or label based)
+- Create a backup from the created backup plan
+- Perform a restore to a Namespace
+- Perform all the above steps as part of a smoketest run
+
+As an example, the task can be utilized as follows:
+
+```yaml
+- name: Trilio for Kubernetes Create Target
+  ansible.builtin.include_tasks: tvk_create_target.yaml
+  tags: ['target']
+  when: tvk_create_target | bool
+```
+
+# Example Playbook
 Example playbook can be found in the playbooks directory of the collection. It includes the Playbook called tvk-utility.yaml, and example configuration files. tvk-config.yaml is always referenced. You can override any values with extra configuration files, such as the content from -e @backup-config.yaml.
 
 

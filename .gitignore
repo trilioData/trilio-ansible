@@ -46,3 +46,4 @@ secret.yaml
 password_file
 
 overrides/
+.vscode/
