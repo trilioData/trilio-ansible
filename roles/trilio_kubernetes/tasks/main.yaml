@@ -58,8 +58,8 @@
   ansible.builtin.include_tasks: tvk_cleanup.yaml
   tags: ['never', 'cleanup']
   when:
-  - tvk_cleanup | bool
-  - tvk_restore_namespace is defined
+    - tvk_cleanup | bool
+    - tvk_restore_namespace is defined
   vars:
     tvk_namespace: "{{ tvk_restore_namespace }}"
 
