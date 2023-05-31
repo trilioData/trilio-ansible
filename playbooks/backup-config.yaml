@@ -7,7 +7,7 @@ tvk_autoprotect_exclude: ['openshift-storage', 'openshift-operators']
 
 # app yaml to deploy
 tvk_deploy_demo_app: false
-tvk_namespace: shailesh-label-backup
+tvk_namespace: my-vm-namespace
 
 #
 # Backup Target
@@ -19,6 +19,8 @@ tvk_create_target: true
 tvk_target_type: S3
 tvk_target_name: vm-backup-target
 tvk_s3_bucket_name: tvk-migration-demo1
+tvk_s3_region: us-east-1
+tvk_s3_threshold_capacity: 100Gi
 tvk_secret_name: s3-access-secret
 
 #

@@ -34,24 +34,34 @@ tvk_demo_app_yaml: files/demo-mysql-app.yaml
 
 # Specify whether to auto clean the deployment/objects after smoketest
 # 
-# WARNING: THIS DELETES 
+# WARNING: THIS DELETES THINGS IN THE tvk_namespace and tvk_restore_namespace!
+#
 # - ALL BACKUPS IN tvk_namespace and tvk_restore_namespace
 # - ALL DEPLOYMENTS in tvk_namespace and tvk_restore_namespace
 # - THE NAMESPACE tvk_namespace and tvk_restore_namespace
 #
-tvk_cleanup: true
+# WARNING. SEE ABOVE. WARNING.
+#
+tvk_cleanup: false
+#
+# WARNING!
+
+# Secrets (if using S3)
+tvk_create_secret: true
+tvk_secret_name: s3-access-secret
 
 #
 # Backup Target
 #
-# Currently assumes AWS S3
+# Currently Supports AWS S3 ONLY
 # IMPORTANT: See templates/target.yaml.j2 to modify for other targets
 # TODO: Specify NFS or S3
 tvk_create_target: true
 tvk_target_type: S3
 tvk_target_name: smoketest-target
 tvk_s3_bucket_name: tvk-migration-demo1
-tvk_secret_name: s3-access-secret
+tvk_s3_region: us-east-1
+tvk_s3_threshold_capacity: 100Gi
 tvk_enable_browsing: false
 
 #

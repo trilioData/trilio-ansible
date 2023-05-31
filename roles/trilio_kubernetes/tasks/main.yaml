@@ -1,3 +1,4 @@
+# code: language=ansible
 # - name: Trilio for Kubernetes Smoketest
 #  ansible.builtin.include_tasks: tvk_smoketest.yaml
 #  when: tvk_smoketest | bool

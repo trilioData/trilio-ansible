@@ -1,3 +1,5 @@
+# code: language=ansible
+
 # Set of tasks for deploying an app from a YAML source file
 # to a namespace specifed
 #

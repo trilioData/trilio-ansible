@@ -1,5 +1,9 @@
+# code: language=ansible
+
 # Set of tasks for cleaning up after a smoketest run
 # Can also be used to clean up various TVK objects
+#
+# WARNING: THIS DELETES OBJECTS AND NAMESPACES SPECIFIED
 #
 # Authors: Kevin Jackson <kevin.jackson at trilio io>
 

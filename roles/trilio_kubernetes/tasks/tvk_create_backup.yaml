@@ -1,3 +1,5 @@
+# code: language=ansible
+
 # Set of tasks for creating a Trilio for Kubernetes Backup
 #
 # Authors: Kevin Jackson <kevin.jackson at trilio io>

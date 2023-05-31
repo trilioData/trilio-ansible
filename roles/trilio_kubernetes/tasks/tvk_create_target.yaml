@@ -1,3 +1,5 @@
+# code: language=ansible
+
 # Set of tasks for creating a Trilio for Kubernetes Target in a namespace
 # for storing backups
 #

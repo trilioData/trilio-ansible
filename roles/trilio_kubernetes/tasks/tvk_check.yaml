@@ -1,3 +1,5 @@
+# code: language=ansible
+
 # Set of tasks that will check a Kubernetes cluster for
 # - Valid Trilio for Kubernetes License
 # - CSI Drivers Present

@@ -10,6 +10,6 @@ spec:
       name: {{ tvk_secret_name }}
       namespace: {{ tvk_namespace }}
     bucketName: "{{ tvk_s3_bucket_name }}"
-    region: "us-east-1"
-  thresholdCapacity: 100Gi
+    region: "{{ tvk_s3_region }}"
+  thresholdCapacity: "{{ tvk_s3_threshold_capacity }}"
   enableBrowsing: {{ tvk_enable_browsing }}
