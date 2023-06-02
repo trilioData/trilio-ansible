@@ -8,5 +8,5 @@
   tags: ['namespace', 'ns', 'smoketest']
   ansible.builtin.include_tasks: "tvk_create_ns_{{ k8s_auth_type }}.yaml"
   when: tvk_create_namespace | bool
-  vars: 
+  vars:
     namespace: "{{ tvk_namespace }}"
