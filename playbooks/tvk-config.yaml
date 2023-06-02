@@ -16,7 +16,19 @@ tvk_auth: true
 tvk_check: true
 # Uses the values in the config file to create a demo app, target, backuppplan, backup and restore.
 # Set this value for first installation test
+# Specify whether to auto clean the deployment/objects after smoketest
+# 
+# WARNING: THIS DELETES THINGS IN THE tvk_namespace and tvk_restore_namespace!
+#
+# - ALL BACKUPS IN tvk_namespace and tvk_restore_namespace
+# - ALL DEPLOYMENTS in tvk_namespace and tvk_restore_namespace
+# - THE NAMESPACE tvk_namespace and tvk_restore_namespace
+#
+# WARNING. SEE ABOVE. WARNING.
+# Both tvk_smoketest and tvk_smoketest_cleanup must be true to cleanup
+#
 tvk_smoketest: true
+tvk_smoketest_cleanup: true
 
 # Search for suggested NS to backup
 tvk_suggest: true
@@ -32,17 +44,7 @@ tvk_create_namespace: true
 tvk_namespace: smoketest1
 tvk_demo_app_yaml: files/demo-mysql-app.yaml
 
-# Specify whether to auto clean the deployment/objects after smoketest
-# 
-# WARNING: THIS DELETES THINGS IN THE tvk_namespace and tvk_restore_namespace!
-#
-# - ALL BACKUPS IN tvk_namespace and tvk_restore_namespace
-# - ALL DEPLOYMENTS in tvk_namespace and tvk_restore_namespace
-# - THE NAMESPACE tvk_namespace and tvk_restore_namespace
-#
-# WARNING. SEE ABOVE. WARNING.
-#
-tvk_cleanup: false
+
 #
 # WARNING!
 

@@ -20,7 +20,7 @@
 
 - name: Trilio for Kubernetes Create Backup Plan
   ansible.builtin.include_tasks: tvk_create_backupplan.yaml
-  when: tvk_create_target | bool
+  when: tvk_create_backupplan | bool
   tags: ['smoketest']
 
 - name: Trilio for Kubernetes Execute a Backup

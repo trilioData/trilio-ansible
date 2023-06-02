@@ -8,8 +8,10 @@
 # Authors: Kevin Jackson <kevin.jackson at trilio io>
 
 - name: Execute Cleanup Tasks
-  tags: ['cleanup', 'smoketest']
-  when: tvk_cleanup | bool
+  tags: ['smoketest_cleanup', 'smoketest']
+  when:
+    - tvk_smoketest_cleanup | bool
+    - tvk_smoketest | bool
   block:
     - name: Collecting all Deployments from {{ tvk_namespace }}
       kubernetes.core.k8s_info:
