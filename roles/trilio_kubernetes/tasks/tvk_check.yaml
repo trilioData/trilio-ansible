@@ -118,5 +118,5 @@
 
   rescue:
     - name: Warn user on TVK errors
-      ansible.builtin.ansible.builtin.debug:
+      ansible.builtin.debug:
         msg: 'Unable to perform TVK checks'
