@@ -42,7 +42,7 @@
 
     - name: List of Backups that will be removed
       ansible.builtin.debug:
-        msg: "backup_list: {{ backup_list | json_query('resources[*].metadata.name')  }} "
+        msg: "backup_list: {{ backup_list | json_query('resources[*].metadata.name') }}"
 
     - name: Removing all Backups from {{ tvk_namespace }}
       kubernetes.core.k8s:

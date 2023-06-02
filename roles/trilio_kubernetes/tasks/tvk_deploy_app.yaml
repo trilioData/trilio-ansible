@@ -13,33 +13,34 @@
   tags: ['deploy_app', 'smoketest']
   when: tvk_deploy_demo_app | bool
   block:
-  - name: Create App in {{ tvk_namespace }}
-    kubernetes.core.k8s:
-      state: present
-      namespace: "{{ tvk_namespace }}"
-      validate_certs: false
-      src: "{{ tvk_demo_app_yaml }}"
-      wait: true
-    register: app_deployment
+      - name: Create App in {{ tvk_namespace }}
+        kubernetes.core.k8s:
+            state: present
+            namespace: "{{ tvk_namespace }}"
+            validate_certs: false
+            src: "{{ tvk_demo_app_yaml }}"
+            wait: true
+        register: app_deployment
 
-  - name: Application Deployment in the {{ tvk_namespace }} namespace (kubeconfig)
-    ansible.builtin.shell: >
-      kubectl get po,pvc,svc -n {{ tvk_namespace }}
-    environment:
-      KUBECONFIG: "{{ kubeconfig }}"
-    register: deployment_available
-    ignore_errors: true
-    when:
-    - k8s_auth_type == "kubeconfig"
+      - name: Application Deployment in the namespace {{ tvk_namespace }}
+        when: k8s_auth_type == "kubeconfig"
+        ansible.builtin.shell: >
+          kubectl get po,pvc,svc -n {{ tvk_namespace }}
+        environment:
+            KUBECONFIG: "{{ kubeconfig }}"
+        register: deployment_available
+        ignore_errors: true
 
-  - name: Application Deployment in the {{ tvk_namespace }} namespace (token)
-    ansible.builtin.shell: |
-      oc login "{{ k8s_auth_api }}" --token="{{ openshift_auth_results.openshift_auth.api_key }}" --insecure-skip-tls-verify=true
-      oc get po,pvc,svc -n {{ tvk_namespace }}
-    register: deployment_available
-    ignore_errors: true
-    when:
-    - k8s_auth_type == "password"
-    - k8s_distro == "openshift"
-  - name: Show deployment output
-    ansible.builtin.debug: var=deployment_available.stdout_lines
+      - name: Application Deployment in the namespace {{ tvk_namespace }}
+        when:
+            - k8s_auth_type == "password"
+            - k8s_distro == "openshift"
+        ansible.builtin.shell: |
+          oc login "{{ k8s_auth_api }}" --token="{{ openshift_auth_results.openshift_auth.api_key }}" --insecure-skip-tls-verify=true
+          oc get po,pvc,svc -n {{ tvk_namespace }}
+        register: deployment_available
+        ignore_errors: true
+
+      - name: Show backup created output
+        ansible.builtin.debug:
+            var: deployment_available.stdout_lines

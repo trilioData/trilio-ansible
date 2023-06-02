@@ -1,3 +1,5 @@
+# code: language=ansible
+
 # Set of tasks that will check a Kubernetes cluster for
 # - Any NS with a PVC
 # - If tvk_autoprotect: true - create backupplan and
@@ -11,31 +13,31 @@
 - name: Trilio for Kubernetes Auto Protect Routine
   tags: ['suggest', 'search', 'autoprotect', 'smoketest']
   block:
-  - name: Checking Namespaces for PVCs
-    kubernetes.core.k8s_info:
-      api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
-      kind: PersistentVolumeClaim
-      validate_certs: false
-    register: pvc_list
+    - name: Checking Namespaces for PVCs
+      kubernetes.core.k8s_info:
+        api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+        kind: PersistentVolumeClaim
+        validate_certs: false
+      register: pvc_list
 
-  - name: Register Namespaces with PVCs
-    ansible.builtin.set_fact:
-      found_ns_list: "{{ pvc_list | json_query('resources[*].metadata.namespace')  }}"
+    - name: Register Namespaces with PVCs
+      ansible.builtin.set_fact:
+        found_ns_list: "{{ pvc_list | json_query('resources[*].metadata.namespace') }}"
 
-  - name: Remove excluded Namespaces from suggestion
-    ansible.builtin.set_fact:
-      recommended_ns_list: "{{ found_ns_list | difference(tvk_autoprotect_exclude) }}"
+    - name: Remove excluded Namespaces from suggestion
+      ansible.builtin.set_fact:
+        recommended_ns_list: "{{ found_ns_list | difference(tvk_autoprotect_exclude) }}"
 
-  - name: Protect NS Listed
-    ansible.builtin.debug:
-      msg: "{{ recommended_ns_list }}"
+    - name: Protect NS Listed
+      ansible.builtin.debug:
+        msg: "{{ recommended_ns_list }}"
 
-- name: Calling backup plan creation task
-  tags: ['autoprotect']
-  ansible.builtin.include_tasks: tvk_create_backupplan.yaml
-  vars:
-    tvk_namespace: "{{ item }}"
-    tvk_suggest_autoprotect: true
-    tvk_backupplan_name: "{{ tvk_namespace }}-autoprotect"
-  with_items: "{{ recommended_ns_list }}"
-  when: tvk_autoprotect | bool
+    - name: Calling backup plan creation task
+      tags: ['autoprotect']
+      ansible.builtin.include_tasks: tvk_create_backupplan.yaml
+      vars:
+        tvk_namespace: "{{ item }}"
+        tvk_suggest_autoprotect: true
+        tvk_backupplan_name: "{{ tvk_namespace }}-autoprotect"
+      with_items: "{{ recommended_ns_list }}"
+      when: tvk_autoprotect | bool

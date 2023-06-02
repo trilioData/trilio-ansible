@@ -29,6 +29,11 @@
   tags: ['never', 'deploy_app']
   when: tvk_deploy_demo_app | bool
 
+- name: Trilio for Kubernetes Create Secret
+  ansible.builtin.include_tasks: tvk_create_secret.yaml
+  tags: ['secret']
+  when: tvk_create_secret | bool
+
 - name: Trilio for Kubernetes Create Target
   ansible.builtin.include_tasks: tvk_create_target.yaml
   tags: ['target']
