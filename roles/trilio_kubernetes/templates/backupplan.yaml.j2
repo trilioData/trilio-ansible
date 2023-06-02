@@ -3,7 +3,7 @@ kind: BackupPlan
 metadata:
   name: {{ tvk_backupplan_name }}
 spec:
-  backupNamespace: {{ tvk_namespace }}
+  backupNamespace: {{ namespace }}
   backupConfig:
     target:
       name: {{ tvk_target_name }}

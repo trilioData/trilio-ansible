@@ -9,3 +9,5 @@
   ansible.builtin.include_tasks: "tvk_create_backupplan_{{ k8s_auth_type }}.yaml"
   tags: ['backupplan', 'smoketest']
   when: tvk_create_backupplan | bool
+  vars:
+    namespace: "{{ tvk_namespace }}"

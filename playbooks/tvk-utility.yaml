@@ -32,4 +32,5 @@
       host: "{{ k8s_auth_api }}"
   vars_files: tvk-config.yaml
   roles:
-    - trilio.trilio_kubernetes.trilio_kubernetes
+    # - trilio.trilio_kubernetes.trilio_kubernetes
+    - ../roles/trilio_kubernetes

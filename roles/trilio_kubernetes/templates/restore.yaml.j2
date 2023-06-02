@@ -1,12 +1,12 @@
 apiVersion: triliovault.trilio.io/v1
 kind: Restore
 metadata:
-  name: {{ tvk_backup_prefix }}-restore
+  name: {{ tvk_restore_name }}
 spec:
   source:
     type: BackupPlan
     backupPlan:
       name: {{ tvk_backupplan_name }}
       namespace: {{ tvk_namespace }}
-    restoreNamespace: {{ tvk_restore_namespace }}
+    restoreNamespace: {{ namespace }}
   skipIfAlreadyExists: true

@@ -67,3 +67,12 @@
         kind: Namespace
         validate_certs: false
         state: absent
+
+    - name: Remove restore namespace {{ tvk_restore_namespace }}
+      kubernetes.core.k8s:
+        name: "{{ tvk_restore_namespace }}"
+        api_version: v1
+        api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+        kind: Namespace
+        validate_certs: false
+        state: absent
