@@ -6,8 +6,8 @@
 # Authors: Kevin Jackson <kevin.jackson at trilio io>
 
 - name: Create Backup Plan
-  ansible.builtin.include_tasks: "tvk_create_backupplan_{{ k8s_auth_type }}.yaml"
+  ansible.builtin.include_tasks: "trilio_kubernetes_create_backupplan_{{ trilio_kubernetes_auth_type }}.yaml"
   tags: ['backupplan', 'smoketest']
-  when: tvk_create_backupplan | bool
+  when: trilio_kubernetes_create_backupplan | bool
   vars:
-    namespace: "{{ tvk_namespace }}"
+    trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"

@@ -4,12 +4,18 @@
 # User can use kubeconfig or user/pass
 # If a user is authenticating using username/password:
 # Create an encrypted vault file with the following format
-# k8s_username:
-# k8s_password:
+# trilio_kubernetes_username:
+# trilio_kubernetes_password:
 # Pass this encrypted vault file on the ansible command line
 #
 # Authors: Kevin Jackson <kevin.jackson at trilio io>
 
 - name: Authenticate to Kubernetes
-  ansible.builtin.include_tasks: "tvk_auth_{{ k8s_auth_type }}.yaml"
+  ansible.builtin.include_tasks: "trilio_kubernetes_auth_{{ trilio_kubernetes_auth_type }}.yaml"
   tags: ['always']
+  when: trilio_kubernetes_distro == 'kubernetes'
+
+- name: Authenticate to OpenShift
+  ansible.builtin.include_tasks: "trilio_kubernetes_auth_openshift.yaml"
+  tags: ['always']
+  when: trilio_kubernetes_distro == 'openshift'

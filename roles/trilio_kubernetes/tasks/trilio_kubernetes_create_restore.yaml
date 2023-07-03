@@ -1,0 +1,18 @@
+# code: language=ansible
+
+# Set of tasks for creating performing a Trilio for Kubernetes Restore
+#
+# Authors: Kevin Jackson <kevin.jackson at trilio io>
+
+- name: Perform Restore
+  tags: ['restore', 'smoketest']
+  block:
+    - name: Create Restore Namespace
+      ansible.builtin.include_tasks: "trilio_kubernetes_create_ns_{{ trilio_kubernetes_auth_type }}.yaml"
+      when: trilio_kubernetes_create_namespace | bool
+      vars:
+        trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_restore_namespace }}"
+
+    - name: Execute Restore Tasks
+      ansible.builtin.include_tasks: "trilio_kubernetes_create_restore_{{ trilio_kubernetes_auth_type }}.yaml"
+      when: trilio_kubernetes_create_restore | bool

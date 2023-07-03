@@ -1,13 +1,13 @@
 # Search for suggested NS to backup
-tvk_suggest: true
+trilio_kubernetes_suggest: true
 # Auto create NS Backup Plan 
-tvk_autoprotect: true
+trilio_kubernetes_autoprotect: true
 # List of NS to exclude
-tvk_autoprotect_exclude: ['openshift-storage', 'openshift-operators']
+trilio_kubernetes_autoprotect_exclude: ['openshift-storage', 'openshift-operators']
 
 # app yaml to deploy
-tvk_deploy_demo_app: false
-tvk_namespace: my-vm-namespace
+trilio_kubernetes_deploy_demo_app: false
+trilio_kubernetes_namespace: my-vm-namespace
 
 #
 # Backup Target
@@ -15,24 +15,24 @@ tvk_namespace: my-vm-namespace
 # Currently assumes AWS S3
 # IMPORTANT: See templates/target.yaml.j2 to modify for other targets
 # TODO: Specify NFS or S3
-tvk_create_target: true
-tvk_target_type: S3
-tvk_target_name: vm-backup-target
-tvk_s3_bucket_name: tvk-migration-demo1
-tvk_s3_region: us-east-1
-tvk_s3_threshold_capacity: 100Gi
-tvk_secret_name: s3-access-secret
+trilio_kubernetes_create_target: true
+trilio_kubernetes_target_type: S3
+trilio_kubernetes_target_name: vm-backup-target
+trilio_kubernetes_s3_bucket_name: tvk-migration-demo1
+trilio_kubernetes_s3_region: us-east-1
+trilio_kubernetes_s3_threshold_capacity: 100Gi
+trilio_kubernetes_secret_name: s3-access-secret
 
 #
 # Backup Plan Details
 # Note this must be relevant to the test/demo app
 #
-tvk_create_backupplan: true
-tvk_backupplan_name: vm-backupplan
-tvk_backupplan_type: ns # ns|label
-tvk_backup_match_label: "app: k8s-demo-app" # ignored for ns backup type
+trilio_kubernetes_create_backupplan: true
+trilio_kubernetes_backupplan_name: vm-backupplan
+trilio_kubernetes_backupplan_type: ns # ns|label
+trilio_kubernetes_backup_match_label: "app: k8s-demo-app" # ignored for ns backup type
 
 #
 # Perform Backup
-tvk_backup_prefix: "{{ tvk_backupplan_name }}"
-tvk_backup_type: Full # Full | Incremental
+trilio_kubernetes_backup_prefix: "{{ trilio_kubernetes_backupplan_name }}"
+trilio_kubernetes_backup_type: Full # Full | Incremental

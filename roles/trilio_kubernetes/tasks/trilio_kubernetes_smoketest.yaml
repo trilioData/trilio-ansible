@@ -1,0 +1,44 @@
+# Set of tasks for creating a Trilio for Kubernetes Target in a namespace
+# for storing backups
+#
+# Authors: Kevin Jackson <kevin.jackson at trilio io>
+
+- name: Basic Trilio for Kubernetes Checks
+  ansible.builtin.include_tasks: trilio_kubernetes_check.yaml
+  when: trilio_kubernetes_check | bool
+  tags: ['smoketest']
+
+- name: Trilio for Kubernetes Deploy App
+  ansible.builtin.include_tasks: trilio_kubernetes_deploy_app.yaml
+  when: trilio_kubernetes_deploy_demo_app | bool
+  tags: ['smoketest']
+  vars:
+    trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
+
+- name: Trilio for Kubernetes Create Target
+  ansible.builtin.include_tasks: trilio_kubernetes_create_target.yaml
+  when: trilio_kubernetes_create_target | bool
+  tags: ['smoketest']
+  vars:
+    trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
+
+- name: Trilio for Kubernetes Create Backup Plan
+  ansible.builtin.include_tasks: trilio_kubernetes_create_backupplan.yaml
+  when: trilio_kubernetes_create_backupplan | bool
+  tags: ['smoketest']
+  vars:
+    trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
+
+- name: Trilio for Kubernetes Execute a Backup
+  ansible.builtin.include_tasks: trilio_kubernetes_create_backup.yaml
+  when: trilio_kubernetes_create_backup | bool
+  tags: ['smoketest']
+  vars:
+    trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
+
+- name: Trilio for Kubernetes Perform Restore
+  ansible.builtin.include_tasks: trilio_kubernetes_create_restore.yaml
+  when: trilio_kubernetes_create_restore | bool
+  tags: ['smoketest']
+  vars:
+    trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_restore_namespace }}"

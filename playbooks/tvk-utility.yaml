@@ -13,7 +13,7 @@
 # A combination of the above can be used
 # e.g. --tags "auth,check,namespace,target,backupplan"
 #
-# Specifying no tags will run through the configuration in tvk-config.yaml
+# Specifying no tags will run through the configuration in trilio_kubernetes-config.yaml
 # executing backups and creating targets as specified, etc.
 #
 # Deployment Test: Smoketest
@@ -21,16 +21,14 @@
 
 ####################### CONFIGURATION ########################
 # Configuration of the environment and Trilio for Kubernetes
-#                   See tvk-config.yaml
+#                   See trilio_kubernetes-config.yaml
 ##############################################################
 #
 
 - name: Trilio for Kubernetes Ansible Utility
   hosts: localhost
-  module_defaults:
-    group/k8s:
-      host: "{{ k8s_auth_api }}"
-  vars_files: tvk-config.yaml
+  vars_files: trilio_kubernetes-config.yaml
   roles:
-    - trilio.trilio_kubernetes.trilio_kubernetes
-    # Local use: - ../roles/trilio_kubernetes
+    # - trilio.trilio_kubernetes.trilio_kubernetes
+    # Local use below:
+    - ../roles/trilio_kubernetes
