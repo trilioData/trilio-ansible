@@ -10,3 +10,4 @@
   when: trilio_kubernetes_create_backup | bool
   vars:
     trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
+    trilio_kubernetes_auth_results: "{{ trilio_kubernetes_openshift_auth_results }}"

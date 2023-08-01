@@ -18,6 +18,10 @@ trilio_kubernetes_check: true
 # Set this value for first installation test
 # Specify whether to auto clean the deployment/objects after smoketest
 # 
+
+# Use the CLI to poll for running tasks
+trilio_kubernetes_cli: true
+
 # WARNING: THIS DELETES THINGS IN THE trilio_kubernetes_namespace and trilio_kubernetes_restore_namespace!
 #
 # - ALL BACKUPS IN trilio_kubernetes_namespace and trilio_kubernetes_restore_namespace
@@ -42,11 +46,7 @@ trilio_kubernetes_deploy_demo_app: true
 trilio_kubernetes_scc_policy_anyuid_to_ns: true
 trilio_kubernetes_create_namespace: true
 trilio_kubernetes_namespace: smoketest1
-trilio_kubernetes_demo_app_yaml: files/demo-mysql-app.yaml
-
-
-#
-# WARNING!
+trilio_kubernetes_demo_app_yaml: https://raw.githubusercontent.com/uksysadmin/trilio-ansible/main/files/demo-mysql-app.yaml
 
 # Secrets (if using S3)
 trilio_kubernetes_create_secret: true
