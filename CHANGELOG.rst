@@ -8,6 +8,10 @@ trilio.trilio_kubernetes Release Notes
 v1.1.1
 ======
 
+Minor Changes
+-------------
+- Added trilio_kubernetes_cli boolean as a switch to run kubectl/oc commands for polling or not. Useful, currently, for running in Ansible Automation Platform.
+
 Bugfixes
 --------
 
