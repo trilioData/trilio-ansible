@@ -4,6 +4,18 @@ trilio.trilio_kubernetes Release Notes
 
 .. contents:: Topics
 
+v1.1.2
+======
+
+Minor Changes
+-------------
+- Added trilio_kubernetes_operator_namespace variable, defaults to trilio-system
+- Renamed example playbook to trilio-utility.yaml
+
+Bugfixes
+--------
+
+- User/password authentication fixes for various tasks, namely missing host for check tasks.
 
 v1.1.1
 ======

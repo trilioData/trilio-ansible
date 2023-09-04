@@ -10,6 +10,9 @@ trilio_kubernetes_auth_type: password # password | kubeconfig
 # Kubeconfig
 kubeconfig: # path to kubeconfig file if kube_auth_type is 'kubeconfig'
 
+# Trilio Operator
+trilio_kubernetes_operator_namespace: trilio-system
+
 # Always authenticate unless you have a reason to skip this
 trilio_kubernetes_auth: true
 # Performs a check of the license and other prequisites
@@ -39,7 +42,7 @@ trilio_kubernetes_suggest: true
 # Auto create NS Backup Plan 
 trilio_kubernetes_autoprotect: true
 # List of NS to exclude
-trilio_kubernetes_autoprotect_exclude: ['openshift-storage', 'openshift-operators']
+trilio_kubernetes_autoprotect_exclude: ['openshift-storage', 'openshift-operators', 'trilio-system']
 
 # app yaml to deploy
 trilio_kubernetes_deploy_demo_app: true
