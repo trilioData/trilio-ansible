@@ -1,6 +1,6 @@
 # code: language=ansible
 
-# Set of tasks that will check the target cluster for 
+# Set of tasks that will check the target cluster for
 # basic set of prerequisites for Trilio
 #
 # Authors: Kevin Jackson <kevin.jackson at trilio io>
