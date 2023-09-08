@@ -6,7 +6,7 @@
 # Username/Pass
 # Note: 'openshift' assumes kubectl and oc tools installed
 trilio_kubernetes_distro: openshift # kubernetes | openshift
-trilio_kubernetes_auth_type: password # password | kubeconfig
+trilio_kubernetes_auth_type: external # password | kubeconfig | external
 # Kubeconfig
 kubeconfig: # path to kubeconfig file if kube_auth_type is 'kubeconfig'
 

@@ -6,7 +6,8 @@
 
 - name: Authentication to Kubernetes
   ansible.builtin.include_tasks: trilio_kubernetes_auth.yaml
-  tags: ['always', 'auth']
+  # tags: ['always', 'auth']
+  tags: ['auth']
   when: trilio_kubernetes_auth | bool
 
 - name: Basic Trilio for Kubernetes Checks
