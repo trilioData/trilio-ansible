@@ -7,10 +7,12 @@
 
 - name: Checks for Kubernetes
   ansible.builtin.include_tasks: "trilio_kubernetes_check_kubeconfig.yaml"
+  tags: ['check']
   when: trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
 
 - name: Checks for OpenShift
   ansible.builtin.include_tasks: "trilio_kubernetes_check_openshift.yaml"
+  tags: ['check']
   when:
     - trilio_kubernetes_distro == 'openshift'
     - trilio_kubernetes_auth_type == 'password'
