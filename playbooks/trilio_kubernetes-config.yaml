@@ -46,7 +46,9 @@ trilio_kubernetes_autoprotect_exclude: ['openshift-storage', 'openshift-operator
 
 # app yaml to deploy
 trilio_kubernetes_deploy_demo_app: true
-trilio_kubernetes_scc_policy_anyuid_to_ns: true
+trilio_kubernetes_scc_policy_to_ns: true
+trilio_kubernetes_rbac_service_account: default
+trilio_kubernetes_rbac_uid_to_use: "system:openshift:scc:anyuid"
 trilio_kubernetes_create_namespace: true
 trilio_kubernetes_namespace: smoketest1
 trilio_kubernetes_demo_app_yaml: https://raw.githubusercontent.com/uksysadmin/trilio-ansible/main/files/demo-mysql-app.yaml
