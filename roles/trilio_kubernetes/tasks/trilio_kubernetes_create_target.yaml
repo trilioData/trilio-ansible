@@ -21,7 +21,7 @@
 - name: Create Target
   ansible.builtin.include_tasks: "trilio_kubernetes_create_target_kubeconfig.yaml"
   tags: ['target', 'smoketest']
-  when: 
+  when:
     - trilio_kubernetes_create_target | bool
     - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
   vars:
@@ -30,7 +30,7 @@
 - name: Create Target (OpenShift Token)
   ansible.builtin.include_tasks: "trilio_kubernetes_create_target_kubeconfig.yaml"
   tags: ['target', 'smoketest']
-  when: 
+  when:
     - trilio_kubernetes_create_target | bool
     - trilio_kubernetes_distro == 'openshift'
     - trilio_kubernetes_auth_type == 'password'
