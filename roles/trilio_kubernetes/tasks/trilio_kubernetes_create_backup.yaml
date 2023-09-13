@@ -8,17 +8,14 @@
   ansible.builtin.include_tasks: "trilio_kubernetes_create_backup_kubeconfig.yaml"
   tags: ['backup', 'smoketest']
   when:
-    - trilio_kubernetes_create_secret | bool
     - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
   vars:
     trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
-    trilio_kubernetes_auth_results: "{{ trilio_kubernetes_openshift_auth_results }}"
 
 - name: Create Backup (OpenShift Auth)
   ansible.builtin.include_tasks: "trilio_kubernetes_create_backup_password.yaml"
   tags: ['backup', 'smoketest']
   when:
-    - trilio_kubernetes_create_secret | bool
     - trilio_kubernetes_distro == 'openshift' and trilio_kubernetes_auth_type == 'password'
   vars:
     trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
