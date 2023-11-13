@@ -4,6 +4,14 @@ trilio.trilio_kubernetes Release Notes
 
 .. contents:: Topics
 
+v1.1.3
+======
+
+Minor Changes
+-------------
+- Added support for OpenShift Bearer Credential type in Ansible Automation Platform
+
+
 v1.1.2
 ======
 
