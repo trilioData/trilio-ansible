@@ -1,18 +1,18 @@
 # code: language=ansible
 
-# Set of tasks that will check the target cluster for 
+# Set of tasks that will check the target cluster for
 # basic set of prerequisites for Trilio
 #
 # Authors: Kevin Jackson <kevin.jackson at trilio io>
 
 - name: Checks for Kubernetes
   ansible.builtin.include_tasks: "trilio_kubernetes_check_kubeconfig.yaml"
-  tags: ['always']
+  tags: ['check']
   when: trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
 
 - name: Checks for OpenShift
   ansible.builtin.include_tasks: "trilio_kubernetes_check_openshift.yaml"
-  tags: ['always']
+  tags: ['check']
   when:
     - trilio_kubernetes_distro == 'openshift'
     - trilio_kubernetes_auth_type == 'password'

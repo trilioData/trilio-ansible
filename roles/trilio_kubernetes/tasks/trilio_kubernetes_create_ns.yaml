@@ -6,7 +6,19 @@
 
 - name: Create Namespace
   tags: ['namespace', 'ns', 'smoketest']
-  ansible.builtin.include_tasks: "trilio_kubernetes_create_ns_{{ trilio_kubernetes_auth_type }}.yaml"
-  when: trilio_kubernetes_create_namespace | bool
+  ansible.builtin.include_tasks: "trilio_kubernetes_create_ns_kubeconfig.yaml"
+  when:
+    - trilio_kubernetes_create_namespace | bool
+    - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
+  vars:
+    trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
+
+- name: Create Namespace (OpenShift Token)
+  tags: ['namespace', 'ns', 'smoketest']
+  ansible.builtin.include_tasks: "trilio_kubernetes_create_ns_password.yaml"
+  when:
+    - trilio_kubernetes_create_namespace | bool
+    - trilio_kubernetes_distro == 'openshift'
+    - trilio_kubernetes_auth_type == 'password'
   vars:
     trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"

@@ -13,14 +13,26 @@
     trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
 
 - name: Create Secret for S3
-  ansible.builtin.include_tasks: "trilio_kubernetes_create_secret_{{ trilio_kubernetes_auth_type }}.yaml"
+  ansible.builtin.include_tasks: "trilio_kubernetes_create_secret.yaml"
   tags: ['secret', 'smoketest']
   vars:
     trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
 
 - name: Create Target
-  ansible.builtin.include_tasks: "trilio_kubernetes_create_target_{{ trilio_kubernetes_auth_type }}.yaml"
-  when: trilio_kubernetes_create_target | bool
+  ansible.builtin.include_tasks: "trilio_kubernetes_create_target_kubeconfig.yaml"
   tags: ['target', 'smoketest']
+  when:
+    - trilio_kubernetes_create_target | bool
+    - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
+  vars:
+    trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
+
+- name: Create Target (OpenShift Token)
+  ansible.builtin.include_tasks: "trilio_kubernetes_create_target_kubeconfig.yaml"
+  tags: ['target', 'smoketest']
+  when:
+    - trilio_kubernetes_create_target | bool
+    - trilio_kubernetes_distro == 'openshift'
+    - trilio_kubernetes_auth_type == 'password'
   vars:
     trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
