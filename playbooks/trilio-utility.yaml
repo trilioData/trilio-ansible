@@ -31,4 +31,4 @@
   roles:
     # - trilio.trilio_kubernetes.trilio_kubernetes
     # Local use below:
-    ../roles/trilio_kubernetes
+    - ../roles/trilio_kubernetes
