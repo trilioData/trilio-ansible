@@ -4,12 +4,13 @@ metadata:
   name: {{ trilio_kubernetes_target_name }}
 spec:
   type: ObjectStore
-  vendor: AWS
+  vendor: {{ trilio_kubernetes_s3_vendor }}
   objectStoreCredentials:
     credentialSecret:
       name: {{ trilio_kubernetes_secret_name }}
       namespace: {{ trilio_kubernetes_namespace_create }}
     bucketName: "{{ trilio_kubernetes_s3_bucket_name }}"
+    url: "{{ trilio_kubernetes_s3_url }}"
     region: "{{ trilio_kubernetes_s3_region }}"
   thresholdCapacity: "{{ trilio_kubernetes_s3_threshold_capacity }}"
   enableBrowsing: {{ trilio_kubernetes_enable_browsing }}
