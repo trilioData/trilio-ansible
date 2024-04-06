@@ -90,11 +90,16 @@ trilio_kubernetes_backup_type: Full # Full | Incremental
 trilio_kubernetes_backup_polling_retries: 10
 trilio_kubernetes_backup_polling_every_seconds: 60
 
-# Perform Restore (to new ns)
+# Perform Restore
+trilio_kubernetes_restore_type: backupplan # backup | backupplan | location | cr
 trilio_kubernetes_create_restore: true
 trilio_kubernetes_restore_namespace: smoketest-restore
 trilio_kubernetes_restore_polling_retries: 10
 trilio_kubernetes_restore_polling_every_seconds: 60
+trilio_kubernetes_restore_data_only: false
+
+# Continuous Restore
+trilio_kubernetes_cr_backupplan: "{{ trilio_kubernetes_backupplan_name }}"
 
 # Used for migration/DR smoketest
 trilio_kubernetes_migrate: true

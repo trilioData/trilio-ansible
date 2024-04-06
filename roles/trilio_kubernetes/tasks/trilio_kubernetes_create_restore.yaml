@@ -13,6 +13,12 @@
       vars:
         trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_restore_namespace }}"
 
+    - name: Execute Continuous Restore Preparion Tasks
+      ansible.builtin.include_tasks: "trilio_kubernetes_continuous_restore_{{ trilio_kubernetes_auth_type }}.yaml"
+      when:
+        - trilio_kubernetes_create_restore | bool
+        - trilio_kubernetes_restore_type == "cr"
+
     - name: Execute Restore Tasks
       ansible.builtin.include_tasks: "trilio_kubernetes_create_restore_{{ trilio_kubernetes_auth_type }}.yaml"
       when: trilio_kubernetes_create_restore | bool

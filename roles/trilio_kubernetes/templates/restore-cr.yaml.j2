@@ -1,0 +1,22 @@
+apiVersion: triliovault.trilio.io/v1
+kind: Restore
+metadata:
+  name: cr-restore
+  namespace: {{ trilio_kubernetes_restore_name }}
+spec:
+  restoreFlags:
+    onlyData: {{ trilio_kubernetes_restore_data_only }}
+    skipIfAlreadyExists: true
+  skipIfAlreadyExists: true
+  source:
+    consistentSet:
+      apiVersion: triliovault.trilio.io/v1
+      kind: ConsistentSet
+      name: {{ trilio_kubernetes_restore_cs }}
+    location: {{ trilio_kubernetes_location_id }}
+    target:
+      apiVersion: triliovault.trilio.io/v1
+      kind: Target
+      name: {{ trilo_kubernetes_event_target }}
+      namespace: {{ trilio_kubernetes_restore_name }}
+    type: ConsistentSet
