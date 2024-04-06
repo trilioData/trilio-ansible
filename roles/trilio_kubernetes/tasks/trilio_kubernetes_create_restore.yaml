@@ -8,8 +8,10 @@
   tags: ['restore', 'smoketest']
   block:
     - name: Create Restore Namespace
-      ansible.builtin.include_tasks: "trilio_kubernetes_create_ns_{{ trilio_kubernetes_auth_type }}.yaml"
-      when: trilio_kubernetes_create_namespace | bool
+      ansible.builtin.include_tasks: "trilio_kubernetes_create_ns_kubeconfig.yaml"
+      when: 
+        - trilio_kubernetes_create_namespace | bool
+        - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
       vars:
         trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_restore_namespace }}"
 
@@ -20,5 +22,7 @@
         - trilio_kubernetes_restore_type == "cr"
 
     - name: Execute Restore Tasks
-      ansible.builtin.include_tasks: "trilio_kubernetes_create_restore_{{ trilio_kubernetes_auth_type }}.yaml"
-      when: trilio_kubernetes_create_restore | bool
+      ansible.builtin.include_tasks: "trilio_kubernetes_create_restore_kubeconfig.yaml"
+      when: 
+        - trilio_kubernetes_create_restore | bool
+        - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
