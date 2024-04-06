@@ -47,3 +47,4 @@ password_file
 
 overrides/
 .vscode/
+get-pip.py

@@ -4,6 +4,14 @@ trilio.trilio_kubernetes Release Notes
 
 .. contents:: Topics
 
+v1.2.0
+======
+
+Minor Changes
+-------------
+- Added support for Continuous Restore restores
+- Added additional options to support all S3 vendors
+
 v1.1.3
 ======
 
