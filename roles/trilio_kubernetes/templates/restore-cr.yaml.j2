@@ -1,7 +1,7 @@
 apiVersion: triliovault.trilio.io/v1
 kind: Restore
 metadata:
-  name: cr-restore
+  name: {{ trilio_kubernetes_restore_name }}
   namespace: {{ trilio_kubernetes_restore_namespace }}
 spec:
   restoreFlags:
