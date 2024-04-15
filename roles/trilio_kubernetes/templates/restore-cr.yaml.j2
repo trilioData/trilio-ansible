@@ -20,3 +20,8 @@ spec:
       name: {{ trilio_kubernetes_event_target }}
       namespace: {{ trilio_kubernetes_restore_namespace }}
     type: ConsistentSet
+  excludeResources:
+  - groupVersionKind:
+      group: ""
+      version: v1
+      kind: TektonConfig
