@@ -6,7 +6,7 @@
 # Username/Pass
 # Note: 'openshift' assumes kubectl and oc tools installed
 trilio_kubernetes_distro: openshift # kubernetes | openshift
-trilio_kubernetes_auth_type: external # password | kubeconfig | external
+trilio_kubernetes_auth_type: password # password | kubeconfig | external
 # Kubeconfig
 kubeconfig: # path to kubeconfig file if kube_auth_type is 'kubeconfig'
 
@@ -46,7 +46,7 @@ trilio_kubernetes_autoprotect_exclude: ['openshift-storage', 'openshift-operator
 
 # app yaml to deploy
 trilio_kubernetes_deploy_demo_app: true
-trilio_kubernetes_scc_policy_to_ns: true
+trilio_kubernetes_scc_policy_anyuid_to_ns: true
 trilio_kubernetes_rbac_service_account: default
 trilio_kubernetes_rbac_uid_to_use: "system:openshift:scc:anyuid"
 trilio_kubernetes_create_namespace: true
@@ -72,6 +72,8 @@ trilio_kubernetes_s3_url: "https://s3.{{ trilio_kubernetes_s3_region }}.amazonaw
 trilio_kubernetes_s3_bucket_name: tvk-migration-demo1
 trilio_kubernetes_s3_threshold_capacity: 100Gi
 trilio_kubernetes_enable_browsing: false
+trilio_kubernetes_target_polling_retries: 10
+trilio_kubernetes_target_polling_every_seconds: 10
 
 #
 # Backup Plan Details
@@ -81,6 +83,8 @@ trilio_kubernetes_create_backupplan: true
 trilio_kubernetes_backupplan_name: smoketest-app-backupplan
 trilio_kubernetes_backupplan_type: ns # ns|label
 trilio_kubernetes_backup_match_label: "app: k8s-demo-app" # ignored for ns backup type
+trilio_kubernetes_backupplan_polling_retries: 10
+trilio_kubernetes_backupplan_polling_every_seconds: 10
 
 #
 # Perform Backup

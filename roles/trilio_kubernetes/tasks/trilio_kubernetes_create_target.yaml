@@ -5,18 +5,18 @@
 #
 # Authors: Kevin Jackson <kevin.jackson at trilio io>
 
-- name: Create Namespace
-  ansible.builtin.include_tasks: trilio_kubernetes_create_ns.yaml
-  when: trilio_kubernetes_create_namespace | bool
-  tags: ['namespace', 'smoketest', 'target', 'migrate']
-  vars:
-    trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
+# - name: Create Namespace
+#  ansible.builtin.include_tasks: trilio_kubernetes_create_ns.yaml
+#  when: trilio_kubernetes_create_namespace | bool
+#  tags: ['namespace', 'smoketest', 'target', 'migrate']
+#  vars:
+#    trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
 
-- name: Create Secret for S3
-  ansible.builtin.include_tasks: "trilio_kubernetes_create_secret.yaml"
-  tags: ['secret', 'smoketest']
-  vars:
-    trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
+# - name: Create Secret for S3
+#  ansible.builtin.include_tasks: "trilio_kubernetes_create_secret.yaml"
+#  tags: ['secret', 'smoketest']
+#  vars:
+#    trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
 
 - name: Create Target
   ansible.builtin.include_tasks: "trilio_kubernetes_create_target_kubeconfig.yaml"
@@ -28,7 +28,7 @@
     trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
 
 - name: Create Target (OpenShift Token)
-  ansible.builtin.include_tasks: "trilio_kubernetes_create_target_kubeconfig.yaml"
+  ansible.builtin.include_tasks: "trilio_kubernetes_create_target_password.yaml"
   tags: ['target', 'smoketest']
   when:
     - trilio_kubernetes_create_target | bool

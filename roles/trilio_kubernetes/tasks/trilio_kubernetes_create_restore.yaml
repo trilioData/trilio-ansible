@@ -19,3 +19,10 @@
       when:
         - trilio_kubernetes_create_restore | bool
         - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
+
+    - name: Execute Restore Tasks (OpenShift Auth)
+      ansible.builtin.include_tasks: "trilio_kubernetes_create_restore_password.yaml"
+      tags: ['backup', 'smoketest']
+      when:
+        - trilio_kubernetes_distro == 'openshift' and trilio_kubernetes_auth_type == 'password'
+        - trilio_kubernetes_create_restore | bool
