@@ -86,6 +86,12 @@ trilio_kubernetes_backup_match_label: "app: k8s-demo-app" # ignored for ns backu
 trilio_kubernetes_backupplan_polling_retries: 10
 trilio_kubernetes_backupplan_polling_every_seconds: 10
 
+# Red Hat OLM Operator Backups
+trilio_kubernetes_operator_subscription_namespace: openshift-operators 
+trilio_kubernetes_operator_subscription: openshift-pipelines-operator-rh
+trilio_kubernetes_operator_group: tekton.dev
+trilio_kubernetes_operator_version: v1
+trilio_kubernetes_operator_kinds: [Task,Pipeline]
 #
 # Perform Backup
 trilio_kubernetes_create_backup: true

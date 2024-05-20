@@ -20,4 +20,20 @@ spec:
     custom:
       - matchLabels:
           {{ trilio_kubernetes_backup_match_label }}
+  {% elif trilio_kubernetes_backupplan_type == 'operator' %}
+  backupPlanComponents:
+    operators:
+      - customResources:
+          {% for kind in {{ trilio_kubernetes_operator_kinds }}.split(',') %}
+            - groupVersionKind:
+                group: "{{ trilio_kubernetes_operator_group }}"
+                kind: "{{ kind.strip() }}"
+                version: "{{ trilio_kubernetes_operator_version }}"
+          {% endfor %}
+        operatorId: "{{ trilio_kubernetes_operator_subscription }}"
+        subscription:
+          apiVersion: "operators.coreos.com/v1alpha1"
+          kind: "Subscription"
+          name: "{{ trilio_kubernetes_operator_subscription }}"
+          namespace: "{{ trilio_kubernetes_operator_subscription_namespace }}"
   {% endif %}
