@@ -2,10 +2,10 @@ apiVersion: triliovault.trilio.io/v1
 kind: Backup
 metadata:
   name: {{ trilio_kubernetes_backup_name }}
-  namespace: {{ trilio_kubernetes_namespace_create }}
+  namespace: {{ trilio_kubernetes_namespace_var }}
 spec:
   type: {{ trilio_kubernetes_backup_type }}
   backupPlan:
     kind: "BackupPlan"
     name: {{ trilio_kubernetes_backupplan_name }}
-    namespace: {{ trilio_kubernetes_namespace_create }}
+    namespace: {{ trilio_kubernetes_namespace_var }}

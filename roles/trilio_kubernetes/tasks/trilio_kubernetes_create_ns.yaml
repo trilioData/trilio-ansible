@@ -11,7 +11,7 @@
     - trilio_kubernetes_create_namespace | bool
     - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
   vars:
-    trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
+    trilio_kubernetes_namespace_var: "{{ trilio_kubernetes_namespace }}"
 
 - name: Create Namespace (OpenShift Token)
   tags: ['namespace', 'ns', 'smoketest']
@@ -21,4 +21,4 @@
     - trilio_kubernetes_distro == 'openshift'
     - trilio_kubernetes_auth_type == 'password'
   vars:
-    trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
+    trilio_kubernetes_namespace_var: "{{ trilio_kubernetes_namespace }}"

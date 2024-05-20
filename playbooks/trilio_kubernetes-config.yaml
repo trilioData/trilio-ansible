@@ -53,6 +53,20 @@ trilio_kubernetes_create_namespace: true
 trilio_kubernetes_namespace: smoketest1
 trilio_kubernetes_demo_app_yaml: https://raw.githubusercontent.com/uksysadmin/trilio-ansible/main/files/demo-mysql-app.yaml
 
+# Namespace Information
+#
+# List of namespaces where backups will be created. Ensure in [] list or
+# on seperate lines, e.g.
+# trilio_kubernetes_backup_namespaces: [ mynamespace1 ]
+# or
+# trilio_kubernetes_backup_namespaces: [ mynamespace1, mynamespace2 ]
+# or
+# trilio_kubernetes_backup_namespaces:
+#   - mynamespace1
+#   - mynamespace2
+
+trilio_kubernetes_backup_namespaces: [ "{{ trilio_kubernetes_namespace }}" ]
+
 # Secrets (if using S3)
 trilio_kubernetes_create_secret: true
 trilio_kubernetes_secret_name: s3-access-secret
