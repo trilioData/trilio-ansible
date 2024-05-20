@@ -24,7 +24,7 @@ spec:
   backupPlanComponents:
     operators:
       - customResources:
-          {% for kind in {{ trilio_kubernetes_operator_kinds }}.split(',') %}
+          {% for kind in trilio_kubernetes_operator_kinds.split(',') %}
             - groupVersionKind:
                 group: "{{ trilio_kubernetes_operator_group }}"
                 kind: "{{ kind.strip() }}"
