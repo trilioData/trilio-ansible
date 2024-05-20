@@ -26,6 +26,7 @@
     - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
   vars:
     trilio_kubernetes_namespace_var: "{{ trilio_kubernetes_namespace }}"
+  loop: "{{ trilio_kubernetes_backup_namespaces }}"
 
 - name: Create Target (OpenShift Token)
   ansible.builtin.include_tasks: "trilio_kubernetes_create_target_password.yaml"
@@ -36,4 +37,4 @@
     - trilio_kubernetes_auth_type == 'password'
   vars:
     trilio_kubernetes_namespace_var: "{{ item }}"
-  loop: "{{ trilio_kubernetes_namespace }}"
+  loop: "{{ trilio_kubernetes_backup_namespaces }}"
