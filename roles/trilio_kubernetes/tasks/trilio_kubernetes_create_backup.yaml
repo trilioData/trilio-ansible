@@ -10,7 +10,9 @@
   when:
     - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
   vars:
-    trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
+    trilio_kubernetes_namespace_var: "{{ item }}"
+    trilio_kubernetes_backupplan_name_var: "{{ item }}-{{ trilio_kubernetes_backupplan_type }}"
+  loop: "{{ trilio_kubernetes_backup_namespaces }}"
 
 - name: Create Backup (OpenShift Auth)
   ansible.builtin.include_tasks: "trilio_kubernetes_create_backup_password.yaml"
@@ -18,5 +20,7 @@
   when:
     - trilio_kubernetes_distro == 'openshift' and trilio_kubernetes_auth_type == 'password'
   vars:
-    trilio_kubernetes_namespace_create: "{{ trilio_kubernetes_namespace }}"
+    trilio_kubernetes_namespace_var: "{{ item }}"
+    trilio_kubernetes_backupplan_name_var: "{{ item }}-{{ trilio_kubernetes_backupplan_type }}"
     trilio_kubernetes_auth_results: "{{ trilio_kubernetes_openshift_auth_results }}"
+  loop: "{{ trilio_kubernetes_backup_namespaces }}"

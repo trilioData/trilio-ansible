@@ -8,7 +8,7 @@ spec:
   objectStoreCredentials:
     credentialSecret:
       name: {{ trilio_kubernetes_secret_name }}
-      namespace: {{ trilio_kubernetes_namespace_create }}
+      namespace: {{ trilio_kubernetes_namespace_var }}
     bucketName: "{{ trilio_kubernetes_s3_bucket_name }}"
     url: "{{ trilio_kubernetes_s3_url }}"
     region: "{{ trilio_kubernetes_s3_region }}"

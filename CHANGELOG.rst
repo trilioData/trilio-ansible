@@ -4,6 +4,16 @@ trilio.trilio_kubernetes Release Notes
 
 .. contents:: Topics
 
+v1.2.1
+======
+
+Minor Bugfixes
+--------------
+- Fixes for shell task change notification
+- Fixes for retries on target and backupplan creation
+- Fixes for ansible CLI and Password based auth
+- Other syntax and lint fixes
+
 v1.2.0
 ======
 
