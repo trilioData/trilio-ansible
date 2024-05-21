@@ -39,7 +39,6 @@ To use this role in your Playbook:
 ```yaml
 - name: Trilio for Kubernetes Ansible Utility
   hosts: localhost
-  vars_files: trilio_kubernetes-config.yaml
   roles:
     - trilio.trilio_kubernetes.trilio_kubernetes
 ```

@@ -1,3 +1,5 @@
+# code: language=ansible
+
 # Trilio For Kubernetes
 # Authors: Kevin Jackson <kevin.jackson at trilio io>
 #
@@ -95,7 +97,7 @@ trilio_kubernetes_target_polling_every_seconds: 10
 #
 trilio_kubernetes_create_backupplan: true
 trilio_kubernetes_backupplan_name: smoketest-app-backupplan
-trilio_kubernetes_backupplan_type: ns # ns|label|operator
+trilio_kubernetes_backupplan_type: ns # ns|label|operator
 trilio_kubernetes_backup_match_label: "app: k8s-demo-app" # ignored for ns backup type
 trilio_kubernetes_backupplan_polling_retries: 10
 trilio_kubernetes_backupplan_polling_every_seconds: 10

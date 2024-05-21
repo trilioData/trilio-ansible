@@ -4,6 +4,15 @@ trilio.trilio_kubernetes Release Notes
 
 .. contents:: Topics
 
+v1.3.0
+======
+
+Minor Changes
+-------------
+- Added support for Operator Backups
+- Added support for multiple namespace Backups
+
+
 v1.2.1
 ======
 
