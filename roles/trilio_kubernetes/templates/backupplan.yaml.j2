@@ -25,6 +25,7 @@ spec:
 {% elif trilio_kubernetes_backupplan_type == 'operator' %}
   backupPlanComponents:
     operators:
+{% if trilio_kubernetes_operator_kinds is defined and trilio_kubernetes_operator_kinds|length %}
       - customResources:
 {% for kind in trilio_kubernetes_operator_kinds.split(',') %}
         - groupVersionKind:
@@ -33,6 +34,9 @@ spec:
             version: "{{ trilio_kubernetes_operator_version }}"
 {% endfor %}
         operatorId: "{{ trilio_kubernetes_operator_subscription }}"
+{% else %}
+      - operatorId: "{{ trilio_kubernetes_operator_subscription }}"
+{% endif %}
         subscription:
           apiVersion: "operators.coreos.com/v1alpha1"
           kind: "Subscription"
