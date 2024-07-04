@@ -122,6 +122,7 @@ trilio_kubernetes_backup_type: Full # Full | Incremental
 trilio_kubernetes_backup_wait: true
 trilio_kubernetes_backup_polling_retries: 10
 trilio_kubernetes_backup_polling_every_seconds: 30
+trilio_kubernetes_backup_batch_size: 1
 
 # Perform Restore
 trilio_kubernetes_restore_type: backupplan # backup | backupplan | location | cr
