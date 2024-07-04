@@ -11,7 +11,7 @@
     - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
   vars:
     trilio_kubernetes_namespace_var: "{{ item }}"
-#    trilio_kubernetes_backup_name_var: "{{ item }}-{{ trilio_kubernetes_backupplan_type }}"
+    trilio_kubernetes_backup_name_var: "{{ item }}-{{ trilio_kubernetes_backupplan_type }}"
     trilio_kubernetes_backupplan_name_var: "{{ item }}-{{ trilio_kubernetes_backupplan_type }}"
   loop: "{{ trilio_kubernetes_backup_namespaces | batch(trilio_kubernetes_backup_batch_size) }}"
   loop_control:
