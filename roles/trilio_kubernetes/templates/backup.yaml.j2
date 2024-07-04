@@ -1,7 +1,7 @@
 apiVersion: triliovault.trilio.io/v1
 kind: Backup
 metadata:
-  name: {{ trilio_kubernetes_backupplan_name_var }}-{{ ansible_date_time.date }}-{{ ansible_date_time.epoch }}
+  name: {{ trilio_kubernetes_backupplan_name_var }}-{{ trilio_kubernetes_backup_timestamp }}
   namespace: {{ item }}
 spec:
   type: {{ trilio_kubernetes_backup_type }}
