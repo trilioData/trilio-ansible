@@ -12,7 +12,8 @@
   vars:
     trilio_kubernetes_namespace_var: "{{ item }}"
     trilio_kubernetes_backup_name_var: "{{ item }}-{{ trilio_kubernetes_backupplan_type }}"
-    trilio_kubernetes_backupplan_name_var: "{{ item }}-{{ trilio_kubernetes_backupplan_type }}"
+    # trilio_kubernetes_backupplan_name_var: "{{ item }}-{{ trilio_kubernetes_backupplan_type }}"
+    trilio_kubernetes_backupplan_name_var: "{{ trilio_kubernetes_backupplan_override is defined and trilio_kubernetes_backupplan_override == true ? {{ trilio_kubernetes_backupplan_name }} : {{ item }}-{{ trilio_kubernetes_backupplan_type }} }}"
     trilio_kubernetes_backup_timestamp: "{{ ansible_date_time.date }}-{{ ansible_date_time.epoch }}"
   loop: "{{ trilio_kubernetes_backup_namespaces | batch(trilio_kubernetes_backup_batch_size) }}"
   loop_control:

@@ -102,6 +102,7 @@ trilio_kubernetes_s3_threshold_capacity: "{{ trilio_kubernetes_target_threshold_
 # Note this must be relevant to the test/demo app
 #
 trilio_kubernetes_create_backupplan: true
+trilio_kubernetes_backupplan_override: false
 trilio_kubernetes_backupplan_name: smoketest-app-backupplan
 trilio_kubernetes_backupplan_type: ns # ns|label|operator
 trilio_kubernetes_backup_match_label: "app: k8s-demo-app" # ignored for ns backup type
