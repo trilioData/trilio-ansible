@@ -15,6 +15,13 @@
   tags: ['check']
   when: trilio_kubernetes_check | bool
 
+- name: Namespace Multi-Select List Definition
+  tags: ['target', 'ns', 'namespace', 'backup', 'backupplan', 'smoketest']
+  when:
+    - trilio_kubernetes_namespace_multitext is defined
+  ansible.builtin.set_fact:
+    trilio_kubernetes_backup_namespaces: "{{ trilio_kubernetes_namespace_multitext.split('\n') }}"
+
 - name: Searching for Backup Recommendations
   ansible.builtin.include_tasks: trilio_kubernetes_suggest.yaml
   tags: ['never', 'suggest', 'search', 'autoprotect']
