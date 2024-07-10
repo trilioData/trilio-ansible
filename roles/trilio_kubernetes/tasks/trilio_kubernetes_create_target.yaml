@@ -18,6 +18,7 @@
 #  vars:
 #    trilio_kubernetes_namespace_var: "{{ trilio_kubernetes_namespace }}"
 - name: Namespace Multi-Select List Definition
+  tags: ['target', 'smoketest']
   when:
     - trilio_kubernetes_namespace_multitext is defined
   ansible.builtin.set_fact:
