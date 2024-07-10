@@ -17,6 +17,11 @@
 #  tags: ['secret', 'smoketest']
 #  vars:
 #    trilio_kubernetes_namespace_var: "{{ trilio_kubernetes_namespace }}"
+- name: Namespace Multi-Select List Definition
+  when:
+    - trilio_kubernetes_namespace_multitext is defined
+  ansible.builtin.set_fact:
+    trilio_kubernetes_backup_namespaces: "{{ trilio_kubernetes_namespace_multitext.split('\n') }}"
 
 - name: Create Target
   ansible.builtin.include_tasks: "trilio_kubernetes_create_target_kubeconfig.yaml"
