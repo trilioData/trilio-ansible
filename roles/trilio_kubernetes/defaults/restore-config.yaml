@@ -1,8 +1,9 @@
 # code: language=ansible
+trilio_kubernetes_distro: kubernetes
+trilio_kubernetes_auth_type: kubeconfig
 
 trilio_kubernetes_backupplan_name: smoketest-app-backupplan
 trilio_kubernetes_backupplan_type: ns # ns|label
-trilio_kubernetes_backup_match_label: "app: k8s-demo-app" # ignored for ns backup type
 
 # Perform Restore (to new ns)
 trilio_kubernetes_restore_namespace: smoketest-restore

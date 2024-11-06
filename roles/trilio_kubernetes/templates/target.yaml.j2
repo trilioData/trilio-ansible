@@ -3,6 +3,7 @@ kind: Target
 metadata:
   name: {{ trilio_kubernetes_target_name }}
 spec:
+{% if trilio_kubernetes_target_type.lower() == 's3' %}
   type: ObjectStore
   vendor: {{ trilio_kubernetes_s3_vendor }}
   objectStoreCredentials:
@@ -12,5 +13,12 @@ spec:
     bucketName: "{{ trilio_kubernetes_s3_bucket_name }}"
     url: "{{ trilio_kubernetes_s3_url }}"
     region: "{{ trilio_kubernetes_s3_region }}"
+{% else %}
+  nfsCredentials:
+    nfsExport: "{{ trilio_kubernetes_nfs_export }}"
+    nfsOptions: "{{ trilio_kubernetes_nfs_mount_options }}"
+  type: "NFS"
+  vendor: "Other"
+{% endif %}
   thresholdCapacity: "{{ trilio_kubernetes_s3_threshold_capacity }}"
   enableBrowsing: {{ trilio_kubernetes_enable_browsing }}

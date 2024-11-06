@@ -3,16 +3,40 @@
 # Set of tasks for creating a Trilio for Kubernetes Backup
 #
 # Authors: Kevin Jackson <kevin.jackson at trilio io>
+- name: Set Explicit Backup Plan Name To Use
+  when: trilio_kubernetes_backupplan_override | bool
+  ansible.builtin.set_fact:
+    trilio_kubernetes_backup_name_var: "{{ trilio_kubernetes_backupplan_name }}"
 
 - name: Create Backup
   ansible.builtin.include_tasks: "trilio_kubernetes_create_backup_kubeconfig.yaml"
   tags: ['backup', 'smoketest']
   when:
     - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
+    - not trilio_kubernetes_backupplan_override | bool
   vars:
     trilio_kubernetes_namespace_var: "{{ item }}"
+    trilio_kubernetes_backup_name_var: "{{ item }}-{{ trilio_kubernetes_backupplan_type }}"
     trilio_kubernetes_backupplan_name_var: "{{ item }}-{{ trilio_kubernetes_backupplan_type }}"
-  loop: "{{ trilio_kubernetes_backup_namespaces }}"
+    trilio_kubernetes_backup_timestamp: "{{ ansible_date_time.date }}-{{ ansible_date_time.epoch }}"
+  loop: "{{ trilio_kubernetes_backup_namespaces | batch(trilio_kubernetes_backup_batch_size) }}"
+  loop_control:
+    loop_var: namespaces_batch
+
+- name: Create Backup
+  ansible.builtin.include_tasks: "trilio_kubernetes_create_backup_kubeconfig.yaml"
+  tags: ['backup', 'smoketest']
+  when:
+    - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
+    - trilio_kubernetes_backupplan_override | bool
+  vars:
+    trilio_kubernetes_namespace_var: "{{ item }}"
+    trilio_kubernetes_backup_name_var: "{{ trilio_kubernetes_backupplan_name }}-{{ trilio_kubernetes_backupplan_type }}"
+    trilio_kubernetes_backupplan_name_var: "{{ trilio_kubernetes_backupplan_name }}"
+    trilio_kubernetes_backup_timestamp: "{{ ansible_date_time.date }}-{{ ansible_date_time.epoch }}"
+  loop: "{{ trilio_kubernetes_backup_namespaces | batch(trilio_kubernetes_backup_batch_size) }}"
+  loop_control:
+    loop_var: namespaces_batch
 
 - name: Create Backup (OpenShift Auth)
   ansible.builtin.include_tasks: "trilio_kubernetes_create_backup_password.yaml"
@@ -23,4 +47,6 @@
     trilio_kubernetes_namespace_var: "{{ item }}"
     trilio_kubernetes_backupplan_name_var: "{{ item }}-{{ trilio_kubernetes_backupplan_type }}"
     trilio_kubernetes_auth_results: "{{ trilio_kubernetes_openshift_auth_results }}"
-  loop: "{{ trilio_kubernetes_backup_namespaces }}"
+  loop: "{{ trilio_kubernetes_backup_namespaces | batch(trilio_kubernetes_backup_batch_size) }}"
+  loop_control:
+    loop_var: namespaces_batch
