@@ -3,6 +3,13 @@ trilio.trilio_kubernetes Release Notes
 ====================================
 
 .. contents:: Topics
+v1.4.1
+======
+
+Minor Changes
+-------------
+- Minor linting issues
+
 v1.4.0
 ======
 
