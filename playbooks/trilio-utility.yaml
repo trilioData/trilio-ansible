@@ -21,13 +21,13 @@
 
 ####################### CONFIGURATION ########################
 # Configuration of the environment and Trilio for Kubernetes
-#                   See trilio_kubernetes-config.yaml
+#                   See defaults/main.yaml
 ##############################################################
 #
 
 - name: Trilio for Kubernetes Ansible Utility
   hosts: localhost
   roles:
-  - trilio.trilio_kubernetes.trilio_kubernetes
+    - trilio.trilio_kubernetes.trilio_kubernetes
   # Local use below:
   # - ../roles/trilio_kubernetes
