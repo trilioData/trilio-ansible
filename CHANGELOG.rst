@@ -3,6 +3,15 @@ trilio.trilio_kubernetes Release Notes
 ====================================
 
 .. contents:: Topics
+v1.4.0
+======
+
+Major Changes
+-------------
+- Added external auth support for use with Ansible Automation Platform Credentials
+- Added support for batched Backups
+- Added support for Continuous Restore restores (trilio_kubernetes_restore_type: cr)
+- Other bug fixes
 
 v1.3.0
 ======

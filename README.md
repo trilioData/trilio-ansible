@@ -52,7 +52,6 @@ There are tasks created to do the following
 - Create a backup plan (a backup plan describes what top backup. Selection is namespace or label based)
 - Create a backup from the created backup plan
 - Perform a restore to a Namespace
-- Perform all the above steps as part of a smoketest run
 
 As an example, the task can be utilized as follows:
 
@@ -75,7 +74,6 @@ ansible-playbook -e @secrets.enc -e @auth.enc --vault-ask-pass tvk-utility.yaml
 ansible-playbook -e @secrets.enc -e @auth.enc --vault-ask-pass tvk-utility.yaml --tags "auth"
 ansible-playbook -e @secrets.enc -e @auth.enc --vault-ask-pass tvk-utility.yaml --tags "check"
 ansible-playbook -e @secrets.enc -e @auth.enc --vault-ask-pass tvk-utility.yaml --tags "backup"
-ansible-playbook -e @secrets.enc -e @auth.enc --vault-ask-pass tvk-utility.yaml --tags "smoketest"
 ```
 
 # Configuration
@@ -88,7 +86,7 @@ command line e.g. -e @/path/to/my-config.yaml
 # Username/Pass
 # Note: 'openshift' assumes kubectl and oc tools installed
 trilio_kubernetes_distro: openshift # kubernetes | openshift
-trilio_kubernetes_auth_type: password # password | kubeconfig
+trilio_kubernetes_auth_type: password # password | kubeconfig | external
 # trilio_kubernetes_auth_api: https://auth_endpoint:6443/ # auth API server if not using kubeconfig
                                              # Recommend to store in auth.enc with credentials and
                                              # encrypt and pass as -e @auth.enc
@@ -173,6 +171,11 @@ ansible-playbook -e @secrets.enc --vault-ask-pass tvk-utility.yaml
 ```
 
 # Authentication
+Authentication can be done using 3 methods:
+* Kubeconfig (kubeconfig)
+* Variable/Encrypted Override (password)
+* Credentials (external)
+
 If using username/password authentication and not using kubeconfig specified in trilio_kubernetes-config.yaml<br>
 Then create a seperate file, *auth.enc*, and encrypt with the following structure:<br>
 ``` yaml
@@ -189,3 +192,43 @@ You would then specify this on the command line with<br>
 ansible-playbook -e @auth.enc -e @secrets.enc --vault-ask-pass tvk-utility.yaml
 ```
 <br>
+
+## Ansible Automation Platform/Galaxy Tower
+When Authenticating using Ansible Automation Platorm's Credentials, specify ``trilio_kubernetes_auth_type: external``.
+Then create a Credential of type ``OpenShift or Kubernetes API Bearer Token``. Then in the Template, select the _Credential_ created.
+
+# Restore Examples
+Trilio Ansible Role provides the ability to perform different restores:
+* Restore specific backup name
+* Restore last backup from a backup plan
+* Restore from a location UUID
+* Restore from Continuous Restore (e.g Disaster Recovery scenario)
+
+These are configured in the variable ``trilio_kubernetes_restore_type: cr # backup | backupplan | location | cr``
+
+## Trilio Continuous Restore
+An example Ansible Configuration Override to perform a Continuous Restore. In this example, you authenticate to the _restore cluster_ only but specify the original backup plan and target from the source cluster:
+
+``` yaml
+---
+trilio_kubernetes_distro: openshift
+trilio_kubernetes_auth_type: external
+
+# Backup Plan Details
+trilio_kubernetes_backupplan_name: "rh-summit-demo"
+trilio_kubernetes_namespace: "demonstration"
+trilio_kubernetes_target_name: "trilio-demo-event-target"
+# Perform Restore
+trilio_kubernetes_restore_type: cr
+trilio_kubernetes_create_restore: true
+trilio_kubernetes_restore_namespace: demonstration
+trilio_kubernetes_restore_polling_retries: 10
+trilio_kubernetes_restore_polling_every_seconds: 60
+trilio_kubernetes_restore_data_only: false
+# Currently only for CR restores
+trilio_kubernetes_restore_delete_pvc_before_restore: false
+
+# Continuous Restore
+trilio_kubernetes_cr_backupplan: "{{ trilio_kubernetes_backupplan_name }}"
+trilio_kubernetes_event_target: "{{ trilio_kubernetes_target_name }}"
+```
