@@ -3,7 +3,7 @@ trilio.trilio_kubernetes Release Notes
 ====================================
 
 .. contents:: Topics
-v1.4.1
+v1.4.2
 ======
 
 Minor Changes
