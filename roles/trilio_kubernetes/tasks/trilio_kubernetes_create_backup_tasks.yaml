@@ -5,6 +5,11 @@
 # Authors: Kevin Jackson <kevin.jackson at trilio io>
 
 - name: Configure the backup for {{ item }}
+  vars:
+    trilio_kubernetes_backupplan_name_var: >-
+      {{ trilio_kubernetes_backupplan_name 
+         if (trilio_kubernetes_backupplan_override | bool) 
+         else (item ~ '-' ~ trilio_kubernetes_backupplan_type) }}
   ansible.builtin.template:
     src: templates/backup.yaml.j2
     dest: /tmp/{{ trilio_kubernetes_backupplan_name_var }}-backup.yaml
@@ -12,7 +17,12 @@
   loop: "{{ namespaces_batch }}"
 
 # Create the specified backup plan in specifed namespace
-- name: Execute the backup of {{ trilio_kubernetes_backupplan_name_var }}
+- name: Execute the backup of {{ item }}
+  vars:
+    trilio_kubernetes_backupplan_name_var: >-
+      {{ trilio_kubernetes_backupplan_name 
+         if (trilio_kubernetes_backupplan_override | bool) 
+         else (item ~ '-' ~ trilio_kubernetes_backupplan_type) }}
   kubernetes.core.k8s:
     api_key: "{{ k8s_auth_api_key }}"
     host: "{{ k8s_auth_host }}"
@@ -31,6 +41,12 @@
 - name: Wait for backups to complete "{{ item }}""
   when:
     - trilio_kubernetes_backup_wait | bool
+  vars:
+    trilio_kubernetes_backupplan_name_var: >-
+      {{ trilio_kubernetes_backupplan_name 
+         if (trilio_kubernetes_backupplan_override | bool) 
+         else (item ~ '-' ~ trilio_kubernetes_backupplan_type) }}
+    trilio_kubernetes_backup_timestamp: "{{ ansible_date_time.date }}-{{ ansible_date_time.epoch }}"
   kubernetes.core.k8s_info:
     api_key: "{{ k8s_auth_api_key }}"
     host: "{{ k8s_auth_host }}"
