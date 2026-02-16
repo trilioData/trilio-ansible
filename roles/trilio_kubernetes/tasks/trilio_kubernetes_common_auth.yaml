@@ -1,0 +1,16 @@
+# code: language=ansible
+# Common Authentication Setup for Trilio Tasks
+
+- name: Set Auth Facts (Password)
+  ansible.builtin.set_fact:
+    k8s_auth_api_key: "{{ trilio_kubernetes_auth_results.openshift_auth.api_key }}"
+    k8s_auth_host: "{{ trilio_kubernetes_host }}"
+    k8s_validate_certs: false
+  when: trilio_kubernetes_auth_type == 'password'
+
+- name: Set Auth Facts (Kubeconfig/External)
+  ansible.builtin.set_fact:
+    k8s_auth_api_key: omit
+    k8s_auth_host: omit
+    k8s_validate_certs: false
+  when: trilio_kubernetes_auth_type != 'password'

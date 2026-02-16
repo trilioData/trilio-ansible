@@ -1,0 +1,62 @@
+# code: language=ansible
+# Unified tasks for performing a Trilio for Kubernetes Restore
+
+- name: Create Restore Namespace
+  ansible.builtin.include_tasks: trilio_kubernetes_create_ns.yaml
+  vars:
+    trilio_kubernetes_namespace: "{{ trilio_kubernetes_restore_namespace }}"
+
+- name: Set restore name
+  ansible.builtin.set_fact:
+    trilio_kubernetes_restore_name: "{{ trilio_kubernetes_backupplan_name }}-{{ ansible_date_time.date }}-{{ ansible_date_time.epoch }}"
+
+- name: Configure the restore from {{ trilio_kubernetes_backupplan_name }}
+  ansible.builtin.template:
+    src: templates/restore-{{ trilio_kubernetes_restore_type }}.yaml.j2
+    dest: /tmp/{{ trilio_kubernetes_backupplan_name }}-{{ trilio_kubernetes_restore_type }}-restore.yaml
+    mode: "0600"
+
+# Delete PVC (CR Only)
+- name: Delete PVC {{ trilio_kubernetes_continuous_restore_pvc.stdout }}
+  when:
+    - trilio_kubernetes_restore_delete_pvc_before_restore | bool
+    - trilio_kubernetes_continuous_restore_pvc | length > 0
+  kubernetes.core.k8s:
+    kind: PersistentVolumeClaim
+    state: absent
+    namespace: "{{ trilio_kubernetes_restore_namespace }}"
+    name: "{{ trilio_kubernetes_continuous_restore_pvc.stdout }}"
+    api_key: "{{ k8s_auth_api_key }}"
+    host: "{{ k8s_auth_host }}"
+    validate_certs: "{{ k8s_validate_certs }}"
+  register: trilio_kubernetes_delete_pvc
+
+# Execute the specified backup restore in specifed namespace
+- name: Execute the restore of {{ trilio_kubernetes_restore_name }}
+  kubernetes.core.k8s:
+    kind: Restore
+    state: present
+    namespace: "{{ trilio_kubernetes_restore_namespace }}"
+    src: "/tmp/{{ trilio_kubernetes_backupplan_name }}-{{ trilio_kubernetes_restore_type }}-restore.yaml"
+    api_key: "{{ k8s_auth_api_key }}"
+    host: "{{ k8s_auth_host }}"
+    validate_certs: "{{ k8s_validate_certs }}"
+  register: trilio_kubernetes_restore
+
+- name: Wait for restore of {{ trilio_kubernetes_restore_name }}
+  when:
+    - trilio_kubernetes_backup_wait | bool
+  kubernetes.core.k8s_info:
+    api_version: "triliovault.trilio.io/v1"
+    kind: Restore
+    namespace: "{{ trilio_kubernetes_restore_namespace }}"
+    name: "{{ trilio_kubernetes_restore_name }}"
+    api_key: "{{ k8s_auth_api_key }}"
+    host: "{{ k8s_auth_host }}"
+    validate_certs: "{{ k8s_validate_certs }}"
+  register: trilio_kubernetes_restore_completed
+  retries: "{{ trilio_kubernetes_restore_polling_retries }}"
+  delay: "{{ trilio_kubernetes_restore_polling_every_seconds }}"
+  until: trilio_kubernetes_restore_completed.resources is defined and
+    trilio_kubernetes_restore_completed.resources | length > 0 and
+    trilio_kubernetes_restore_completed.resources[0].status.status == 'Completed'

@@ -1,28 +1,10 @@
-# code: language=ansible
-
-# Set of tasks for creating a Trilio for Kubernetes Backup Plan in a namespace
-# for describing what and where to backup
-#
-# Authors: Kevin Jackson <kevin.jackson at trilio io>
+- name: Set Auth Facts
+  ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
 
 - name: Create Backup Plan
-  ansible.builtin.include_tasks: "trilio_kubernetes_create_backupplan_kubeconfig.yaml"
+  ansible.builtin.include_tasks: "trilio_kubernetes_create_backupplan_tasks.yaml"
   tags: ['backupplan', 'smoketest']
-  when:
-    - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
   vars:
     trilio_kubernetes_namespace_var: "{{ item }}"
     trilio_kubernetes_backupplan_name_var: "{{ item }}-{{ trilio_kubernetes_backupplan_type }}"
-    trilio_kubernetes_auth_results: "{{ trilio_kubernetes_openshift_auth_results }}"
-  loop: "{{ trilio_kubernetes_backup_namespaces }}"
-
-- name: Create Backup Plan (OpenShift Auth)
-  ansible.builtin.include_tasks: "trilio_kubernetes_create_backupplan_password.yaml"
-  tags: ['backupplan', 'smoketest']
-  when:
-    - trilio_kubernetes_distro == 'openshift' and trilio_kubernetes_auth_type == 'password'
-  vars:
-    trilio_kubernetes_namespace_var: "{{ item }}"
-    trilio_kubernetes_backupplan_name_var: "{{ item }}-{{ trilio_kubernetes_backupplan_type }}"
-    trilio_kubernetes_auth_results: "{{ trilio_kubernetes_openshift_auth_results }}"
   loop: "{{ trilio_kubernetes_backup_namespaces }}"

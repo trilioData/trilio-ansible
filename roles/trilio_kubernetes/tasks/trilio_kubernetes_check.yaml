@@ -1,18 +1,6 @@
-# code: language=ansible
+- name: Set Auth Facts
+  ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
 
-# Set of tasks that will check the target cluster for
-# basic set of prerequisites for Trilio
-#
-# Authors: Kevin Jackson <kevin.jackson at trilio io>
-
-- name: Checks for Kubernetes
-  ansible.builtin.include_tasks: "trilio_kubernetes_check_kubeconfig.yaml"
+- name: Checks for Kubernetes/OpenShift
+  ansible.builtin.include_tasks: "trilio_kubernetes_check_tasks.yaml"
   tags: ['check']
-  when: trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
-
-- name: Checks for OpenShift
-  ansible.builtin.include_tasks: "trilio_kubernetes_check_openshift.yaml"
-  tags: ['check']
-  when:
-    - trilio_kubernetes_distro == 'openshift'
-    - trilio_kubernetes_auth_type == 'password'

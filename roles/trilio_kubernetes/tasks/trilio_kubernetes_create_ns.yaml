@@ -4,23 +4,14 @@
 #
 # Authors: Kevin Jackson <kevin.jackson at trilio io>
 
+- name: Set Auth Facts
+  ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
+
 - name: Create Namespace
   tags: ['namespace', 'ns', 'smoketest']
-  ansible.builtin.include_tasks: "trilio_kubernetes_create_ns_kubeconfig.yaml"
+  ansible.builtin.include_tasks: "trilio_kubernetes_create_ns_tasks.yaml"
   when:
     - trilio_kubernetes_create_namespace | bool
-    - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
-  vars:
-    trilio_kubernetes_namespace_var: "{{ item }}"
-  loop: "{{ trilio_kubernetes_backup_namespaces }}"
-
-- name: Create Namespace (OpenShift Token)
-  tags: ['namespace', 'ns', 'smoketest']
-  ansible.builtin.include_tasks: "trilio_kubernetes_create_ns_password.yaml"
-  when:
-    - trilio_kubernetes_create_namespace | bool
-    - trilio_kubernetes_distro == 'openshift'
-    - trilio_kubernetes_auth_type == 'password'
   vars:
     trilio_kubernetes_namespace_var: "{{ item }}"
   loop: "{{ trilio_kubernetes_backup_namespaces }}"

@@ -1,24 +1,10 @@
-# code: language=ansible
-
-# Set of tasks for creating a Trilio for Kubernetes Backup
-#
-# Authors: Kevin Jackson <kevin.jackson at trilio io>
+- name: Set Auth Facts
+  ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
 
 - name: Deploy Application
   tags: ['deploy_app', 'smoketest']
-  ansible.builtin.include_tasks: "trilio_kubernetes_deploy_app_kubeconfig.yaml"
+  ansible.builtin.include_tasks: "trilio_kubernetes_deploy_app_tasks.yaml"
   when:
     - trilio_kubernetes_deploy_demo_app | bool
-    - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
-  vars:
-    trilio_kubernetes_namespace_var: "{{ trilio_kubernetes_namespace }}"
-
-- name: Create Namespace (OpenShift Token)
-  tags: ['deploy_app', 'smoketest']
-  ansible.builtin.include_tasks: "trilio_kubernetes_deploy_app_password.yaml"
-  when:
-    - trilio_kubernetes_create_namespace | bool
-    - trilio_kubernetes_distro == 'openshift'
-    - trilio_kubernetes_auth_type == 'password'
   vars:
     trilio_kubernetes_namespace_var: "{{ trilio_kubernetes_namespace }}"
