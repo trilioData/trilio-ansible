@@ -26,9 +26,9 @@
     state: absent
     namespace: "{{ trilio_kubernetes_restore_namespace }}"
     name: "{{ trilio_kubernetes_continuous_restore_pvc.stdout }}"
-    api_key: "{{ k8s_auth_api_key }}"
-    host: "{{ k8s_auth_host }}"
-    validate_certs: "{{ k8s_validate_certs }}"
+    api_key: "{{ k8s_auth_api_key | default(omit) }}"
+    host: "{{ k8s_auth_host | default(omit) }}"
+    validate_certs: "{{ k8s_validate_certs | default(omit) }}"
   register: trilio_kubernetes_delete_pvc
 
 # Execute the specified backup restore in specifed namespace
@@ -38,9 +38,9 @@
     state: present
     namespace: "{{ trilio_kubernetes_restore_namespace }}"
     src: "/tmp/{{ trilio_kubernetes_backupplan_name }}-{{ trilio_kubernetes_restore_type }}-restore.yaml"
-    api_key: "{{ k8s_auth_api_key }}"
-    host: "{{ k8s_auth_host }}"
-    validate_certs: "{{ k8s_validate_certs }}"
+    api_key: "{{ k8s_auth_api_key | default(omit) }}"
+    host: "{{ k8s_auth_host | default(omit) }}"
+    validate_certs: "{{ k8s_validate_certs | default(omit) }}"
   register: trilio_kubernetes_restore
 
 - name: Wait for restore of {{ trilio_kubernetes_restore_name }}
@@ -51,9 +51,9 @@
     kind: Restore
     namespace: "{{ trilio_kubernetes_restore_namespace }}"
     name: "{{ trilio_kubernetes_restore_name }}"
-    api_key: "{{ k8s_auth_api_key }}"
-    host: "{{ k8s_auth_host }}"
-    validate_certs: "{{ k8s_validate_certs }}"
+    api_key: "{{ k8s_auth_api_key | default(omit) }}"
+    host: "{{ k8s_auth_host | default(omit) }}"
+    validate_certs: "{{ k8s_validate_certs | default(omit) }}"
   register: trilio_kubernetes_restore_completed
   retries: "{{ trilio_kubernetes_restore_polling_retries }}"
   delay: "{{ trilio_kubernetes_restore_polling_every_seconds }}"

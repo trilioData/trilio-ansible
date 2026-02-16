@@ -15,9 +15,9 @@
 # Create the specified backup plan in specifed namespace
 - name: Execute the backup of {{ item }}
   kubernetes.core.k8s:
-    api_key: "{{ k8s_auth_api_key }}"
-    host: "{{ k8s_auth_host }}"
-    validate_certs: "{{ k8s_validate_certs }}"
+    api_key: "{{ k8s_auth_api_key | default(omit) }}"
+    host: "{{ k8s_auth_host | default(omit) }}"
+    validate_certs: "{{ k8s_validate_certs | default(omit) }}"
     api_version: "triliovault.trilio.io/v1"
     kind: Backup
     state: present
@@ -36,9 +36,9 @@
   vars:
     trilio_kubernetes_backup_timestamp: "{{ ansible_date_time.date }}-{{ ansible_date_time.epoch }}"
   kubernetes.core.k8s_info:
-    api_key: "{{ k8s_auth_api_key }}"
-    host: "{{ k8s_auth_host }}"
-    validate_certs: "{{ k8s_validate_certs }}"
+    api_key: "{{ k8s_auth_api_key | default(omit) }}"
+    host: "{{ k8s_auth_host | default(omit) }}"
+    validate_certs: "{{ k8s_validate_certs | default(omit) }}"
     api_version: "triliovault.trilio.io/v1"
     kind: Backup
     namespace: "{{ item }}"

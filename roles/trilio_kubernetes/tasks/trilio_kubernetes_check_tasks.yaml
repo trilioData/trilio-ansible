@@ -26,18 +26,18 @@
         api_version: triliovault.trilio.io/v1
         kind: License
         namespace: "{{ trilio_kubernetes_operator_namespace }}"
-        validate_certs: "{{ k8s_validate_certs }}"
-        api_key: "{{ k8s_auth_api_key }}"
-        host: "{{ k8s_auth_host }}"
+        validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+        api_key: "{{ k8s_auth_api_key | default(omit) }}"
+        host: "{{ k8s_auth_host | default(omit) }}"
       register: trilio_kubernetes_license
 
     - name: Checking for CSI Drivers
       kubernetes.core.k8s_info:
         api_version: storage.k8s.io/v1
         kind: CSIDriver
-        validate_certs: "{{ k8s_validate_certs }}"
-        api_key: "{{ k8s_auth_api_key }}"
-        host: "{{ k8s_auth_host }}"
+        validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+        api_key: "{{ k8s_auth_api_key | default(omit) }}"
+        host: "{{ k8s_auth_host | default(omit) }}"
       register: trilio_kubernetes_csidrivers
 
     - name: Checking for VolumeSnapshot CRD
@@ -45,9 +45,9 @@
         api_version: apiextensions.k8s.io/v1
         kind: CustomResourceDefinition
         name: volumesnapshot.snapshot.storage.k8s.io
-        validate_certs: "{{ k8s_validate_certs }}"
-        api_key: "{{ k8s_auth_api_key }}"
-        host: "{{ k8s_auth_host }}"
+        validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+        api_key: "{{ k8s_auth_api_key | default(omit) }}"
+        host: "{{ k8s_auth_host | default(omit) }}"
       register: trilio_kubernetes_volumesnapshot
 
     - name: Checking for VolumeSnapshotClass CRD
@@ -55,9 +55,9 @@
         api_version: apiextensions.k8s.io/v1
         kind: CustomResourceDefinition
         name: volumesnapshotclasses.snapshot.storage.k8s.io
-        validate_certs: "{{ k8s_validate_certs }}"
-        api_key: "{{ k8s_auth_api_key }}"
-        host: "{{ k8s_auth_host }}"
+        validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+        api_key: "{{ k8s_auth_api_key | default(omit) }}"
+        host: "{{ k8s_auth_host | default(omit) }}"
       register: trilio_kubernetes_volumesnapshotclasses
 
     - name: Checking for VolumeSnapshotContent CRD
@@ -65,9 +65,9 @@
         api_version: apiextensions.k8s.io/v1
         kind: CustomResourceDefinition
         name: volumesnapshotclasses.snapshot.storage.k8s.io
-        validate_certs: "{{ k8s_validate_certs }}"
-        api_key: "{{ k8s_auth_api_key }}"
-        host: "{{ k8s_auth_host }}"
+        validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+        api_key: "{{ k8s_auth_api_key | default(omit) }}"
+        host: "{{ k8s_auth_host | default(omit) }}"
       register: trilio_kubernetes_volumesnapshotcontent
 
   rescue:

@@ -15,9 +15,9 @@
     state: present
     namespace: "{{ trilio_kubernetes_namespace_var }}"
     src: "/tmp/{{ trilio_kubernetes_backupplan_name_var }}-backupplan.yaml"
-    api_key: "{{ k8s_auth_api_key }}"
-    host: "{{ k8s_auth_host }}"
-    validate_certs: "{{ k8s_validate_certs }}"
+    api_key: "{{ k8s_auth_api_key | default(omit) }}"
+    host: "{{ k8s_auth_host | default(omit) }}"
+    validate_certs: "{{ k8s_validate_certs | default(omit) }}"
   register: trilio_kubernetes_backupplan
   tags: ['backupplan', 'smoketest']
 
@@ -26,9 +26,9 @@
     kind: BackupPlan
     namespace: "{{ trilio_kubernetes_namespace_var }}"
     name: "{{ trilio_kubernetes_backupplan_name_var }}"
-    api_key: "{{ k8s_auth_api_key }}"
-    host: "{{ k8s_auth_host }}"
-    validate_certs: "{{ k8s_validate_certs }}"
+    api_key: "{{ k8s_auth_api_key | default(omit) }}"
+    host: "{{ k8s_auth_host | default(omit) }}"
+    validate_certs: "{{ k8s_validate_certs | default(omit) }}"
   register: trilio_kubernetes_backupplan_available
   retries: "{{ trilio_kubernetes_backupplan_polling_retries }}"
   delay: "{{ trilio_kubernetes_backupplan_polling_every_seconds }}"

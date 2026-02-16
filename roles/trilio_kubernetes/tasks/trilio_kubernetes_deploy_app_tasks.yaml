@@ -9,9 +9,9 @@
   kubernetes.core.k8s:
     state: present
     namespace: "{{ trilio_kubernetes_namespace }}"
-    validate_certs: "{{ k8s_validate_certs }}"
-    api_key: "{{ k8s_auth_api_key }}"
-    host: "{{ k8s_auth_host }}"
+    validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+    api_key: "{{ k8s_auth_api_key | default(omit) }}"
+    host: "{{ k8s_auth_host | default(omit) }}"
     src: "{{ trilio_kubernetes_demo_app_yaml }}"
     wait: true
   register: trilio_kubernetes_app_deployment

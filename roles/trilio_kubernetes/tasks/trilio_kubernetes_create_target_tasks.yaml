@@ -13,9 +13,9 @@
     state: present
     namespace: "{{ trilio_kubernetes_namespace_var }}"
     src: "/tmp/target.yaml"
-    api_key: "{{ k8s_auth_api_key }}"
-    host: "{{ k8s_auth_host }}"
-    validate_certs: "{{ k8s_validate_certs }}"
+    api_key: "{{ k8s_auth_api_key | default(omit) }}"
+    host: "{{ k8s_auth_host | default(omit) }}"
+    validate_certs: "{{ k8s_validate_certs | default(omit) }}"
   register: trilio_kubernetes_target
 
 - name: Wait for the target to be created in the namespace {{ trilio_kubernetes_namespace_var }}
@@ -23,9 +23,9 @@
     kind: Target
     namespace: "{{ trilio_kubernetes_namespace_var }}"
     name: "{{ trilio_kubernetes_target_name }}"
-    api_key: "{{ k8s_auth_api_key }}"
-    host: "{{ k8s_auth_host }}"
-    validate_certs: "{{ k8s_validate_certs }}"
+    api_key: "{{ k8s_auth_api_key | default(omit) }}"
+    host: "{{ k8s_auth_host | default(omit) }}"
+    validate_certs: "{{ k8s_validate_certs | default(omit) }}"
   register: trilio_kubernetes_target_available
   retries: "{{ trilio_kubernetes_target_polling_retries }}"
   delay: "{{ trilio_kubernetes_target_polling_every_seconds }}"
