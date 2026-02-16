@@ -11,8 +11,6 @@
 
 - name: Set Auth Facts (Kubeconfig/External)
   ansible.builtin.set_fact:
-    k8s_auth_api_key: omit
-    k8s_auth_host: omit
     k8s_validate_certs: false
   when: trilio_kubernetes_auth_type != 'password'
   tags: ['always']
