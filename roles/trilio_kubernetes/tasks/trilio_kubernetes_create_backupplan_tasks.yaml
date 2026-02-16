@@ -6,6 +6,7 @@
     src: templates/backupplan.yaml.j2
     dest: /tmp/{{ trilio_kubernetes_backupplan_name_var }}-backupplan.yaml
     mode: "0600"
+  tags: ['backupplan', 'smoketest']
 
 # Create the specified backup plan in specifed namespace
 - name: Create the backup plan "{{ trilio_kubernetes_backupplan_name_var }}"
@@ -18,6 +19,7 @@
     host: "{{ k8s_auth_host }}"
     validate_certs: "{{ k8s_validate_certs }}"
   register: trilio_kubernetes_backupplan
+  tags: ['backupplan', 'smoketest']
 
 - name: Wait for the backup plan to be created "{{ trilio_kubernetes_backupplan_name_var }}"
   kubernetes.core.k8s_info:
@@ -33,3 +35,4 @@
   until: trilio_kubernetes_backupplan_available.resources is defined and
     trilio_kubernetes_backupplan_available.resources | length > 0 and
     trilio_kubernetes_backupplan_available.resources[0].status.status == 'Available'
+  tags: ['backupplan', 'smoketest']

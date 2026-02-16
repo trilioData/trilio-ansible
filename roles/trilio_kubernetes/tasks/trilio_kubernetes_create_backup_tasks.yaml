@@ -14,6 +14,7 @@
     src: templates/backup.yaml.j2
     dest: /tmp/{{ trilio_kubernetes_backupplan_name_var }}-backup.yaml
     mode: "0600"
+  tags: ['backup', 'smoketest']
   loop: "{{ namespaces_batch }}"
 
 # Create the specified backup plan in specifed namespace
@@ -36,6 +37,7 @@
     wait_sleep: "{{ trilio_kubernetes_backup_polling_every_seconds }}"
     wait_timeout: "{{ trilio_kubernetes_backup_polling_retries }}"
   register: trilio_kubernetes_backup
+  tags: ['backup', 'smoketest']
   loop: "{{ namespaces_batch }}"
 
 - name: Wait for backups to complete "{{ item }}""
@@ -58,7 +60,7 @@
   register: backups
   retries: "{{ trilio_kubernetes_backup_polling_retries }}"
   delay: "{{ trilio_kubernetes_restore_polling_every_seconds }}"
-  until: backups.resources is defined and
     backups.resources | length > 0 and
     backups.resources[0].status.status == 'Available'
+  tags: ['backup', 'smoketest']
   loop: "{{ namespaces_batch }}"
