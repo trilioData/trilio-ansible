@@ -2,6 +2,7 @@
 # Unified tasks for performing a Trilio for Kubernetes Restore
 
 - name: Create Restore Namespace
+  tags: ['restore', 'smoketest']
   ansible.builtin.include_tasks: trilio_kubernetes_create_ns.yaml
   vars:
     trilio_kubernetes_namespace: "{{ trilio_kubernetes_restore_namespace }}"
@@ -9,12 +10,14 @@
 - name: Set restore name
   ansible.builtin.set_fact:
     trilio_kubernetes_restore_name: "{{ trilio_kubernetes_backupplan_name }}-{{ ansible_date_time.date }}-{{ ansible_date_time.epoch }}"
+  tags: ['restore', 'smoketest']
 
 - name: Configure the restore from {{ trilio_kubernetes_backupplan_name }}
   ansible.builtin.template:
     src: templates/restore-{{ trilio_kubernetes_restore_type }}.yaml.j2
     dest: /tmp/{{ trilio_kubernetes_backupplan_name }}-{{ trilio_kubernetes_restore_type }}-restore.yaml
     mode: "0600"
+  tags: ['restore', 'smoketest']
 
 # Delete PVC (CR Only)
 - name: Delete PVC {{ trilio_kubernetes_continuous_restore_pvc.stdout }}
@@ -30,6 +33,7 @@
     host: "{{ k8s_auth_host | default(omit) }}"
     validate_certs: "{{ k8s_validate_certs | default(omit) }}"
   register: trilio_kubernetes_delete_pvc
+  tags: ['restore', 'smoketest']
 
 # Execute the specified backup restore in specifed namespace
 - name: Execute the restore of {{ trilio_kubernetes_restore_name }}
@@ -42,6 +46,7 @@
     host: "{{ k8s_auth_host | default(omit) }}"
     validate_certs: "{{ k8s_validate_certs | default(omit) }}"
   register: trilio_kubernetes_restore
+  tags: ['restore', 'smoketest']
 
 - name: Wait for restore of {{ trilio_kubernetes_restore_name }}
   when:
@@ -60,3 +65,4 @@
   until: trilio_kubernetes_restore_completed.resources is defined and
     trilio_kubernetes_restore_completed.resources | length > 0 and
     trilio_kubernetes_restore_completed.resources[0].status.status == 'Completed'
+  tags: ['restore', 'smoketest']
