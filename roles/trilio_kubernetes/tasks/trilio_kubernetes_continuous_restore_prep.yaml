@@ -1,0 +1,81 @@
+# code: language=ansible
+# Tasks for Continuous Restore Preparation
+
+- name: Continuous Restore Prep (Kubeconfig/External)
+  when:
+    - trilio_kubernetes_create_restore | bool
+    - trilio_kubernetes_restore_type == "cr"
+    - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
+  block:
+    - name: Identify Continuous Restore Policy
+      ansible.builtin.shell: >
+        kubectl get restore -n {{ trilio_kubernetes_restore_namespace }} --no-headers -o custom-columns=":metadata.name" | grep {{ trilio_kubernetes_backupplan_name }}
+      environment:
+        KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
+      register: trilio_kubernetes_continuous_restore_policy
+      ignore_errors: true
+      changed_when: false
+
+    - name: Identify Last Consistent Set
+      ansible.builtin.shell: >
+        kubectl get restore -n {{ trilio_kubernetes_restore_namespace }} {{ trilio_kubernetes_continuous_restore_policy.stdout }} -o jsonpath='{.status.lastBoundConsistentSet}'
+      environment:
+        KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
+      register: trilio_kubernetes_continuous_restore_last_bound_consistent_set
+      changed_when: false
+      failed_when: trilio_kubernetes_continuous_restore_last_bound_consistent_set.stdout == ""
+
+    - name: Identify Location of Last Consistent Set
+      ansible.builtin.shell: >
+        kubectl get restore -n {{ trilio_kubernetes_restore_namespace }} {{ trilio_kubernetes_continuous_restore_policy.stdout }} -o jsonpath='{.spec.location}'
+      environment:
+        KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
+      register: trilio_kubernetes_continuous_restore_location
+      changed_when: false
+
+    - name: Identify PVC of Last Consistent Set
+      ansible.builtin.shell: >
+        kubectl get pvc -n {{ trilio_kubernetes_restore_namespace }} -l "triliovault.trilio.io/owner-restore={{ trilio_kubernetes_continuous_restore_policy.stdout }}" --no-headers -o custom-columns=":metadata.name"
+      environment:
+        KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
+      register: trilio_kubernetes_continuous_restore_pvc
+      changed_when: false
+
+
+- name: Continuous Restore Prep (OpenShift/Password)
+  when:
+    - trilio_kubernetes_create_restore | bool
+    - trilio_kubernetes_restore_type == "cr"
+    - trilio_kubernetes_distro == 'openshift'
+    - trilio_kubernetes_auth_type == 'password'
+  block:
+    - name: Log in to OpenShift
+      ansible.builtin.shell: |
+         oc login "{{ trilio_kubernetes_auth_api }}" --token="{{ trilio_kubernetes_auth_results.openshift_auth.api_key }}" --insecure-skip-tls-verify=true
+      changed_when: false
+
+    - name: Identify Continuous Restore Policy
+      ansible.builtin.shell: |
+        oc get restore -n {{ trilio_kubernetes_restore_namespace }} --no-headers -o custom-columns=":metadata.name" | grep {{ trilio_kubernetes_backupplan_name }}
+      register: trilio_kubernetes_continuous_restore_policy
+      ignore_errors: true
+      changed_when: false
+
+    - name: Identify Last Consistent Set
+      ansible.builtin.shell: |
+        oc get restore -n {{ trilio_kubernetes_restore_namespace }} {{ trilio_kubernetes_continuous_restore_policy.stdout }} -o jsonpath='{.status.lastBoundConsistentSet}'
+      register: trilio_kubernetes_continuous_restore_last_bound_consistent_set
+      changed_when: false
+      failed_when: trilio_kubernetes_continuous_restore_last_bound_consistent_set.stdout == ""
+
+    - name: Identify Location of Last Consistent Set
+      ansible.builtin.shell: |
+        oc get restore -n {{ trilio_kubernetes_restore_namespace }} {{ trilio_kubernetes_continuous_restore_policy.stdout }} -o jsonpath='{.spec.location}'
+      register: trilio_kubernetes_continuous_restore_location
+      changed_when: false
+
+    - name: Identify PVC of Last Consistent Set
+      ansible.builtin.shell: |
+        oc get pvc -n {{ trilio_kubernetes_restore_namespace }} -l "triliovault.trilio.io/owner-restore={{ trilio_kubernetes_continuous_restore_policy.stdout }}" --no-headers -o custom-columns=":metadata.name"
+      register: trilio_kubernetes_continuous_restore_pvc
+      changed_when: false

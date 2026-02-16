@@ -1,11 +1,55 @@
+# code: language=ansible
+# Tasks for deploying an app from a YAML source file
+
 - name: Set Auth Facts
   ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
   tags: ['always']
 
-- name: Deploy Application
-  tags: ['deploy_app', 'smoketest']
-  ansible.builtin.include_tasks: "trilio_kubernetes_deploy_app_tasks.yaml"
+- name: Deploy Application Block
   when:
     - trilio_kubernetes_deploy_demo_app | bool
+  tags: ['deploy_app', 'smoketest']
   vars:
     trilio_kubernetes_namespace_var: "{{ trilio_kubernetes_namespace }}"
+  block:
+    - name: Create Namespace
+      ansible.builtin.include_tasks: trilio_kubernetes_create_ns.yaml
+
+    - name: Create App in {{ trilio_kubernetes_namespace }}
+      kubernetes.core.k8s:
+        state: present
+        namespace: "{{ trilio_kubernetes_namespace }}"
+        validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+        api_key: "{{ k8s_auth_api_key | default(omit) }}"
+        host: "{{ k8s_auth_host | default(omit) }}"
+        src: "{{ trilio_kubernetes_demo_app_yaml }}"
+        wait: true
+      register: trilio_kubernetes_app_deployment
+
+    - name: Application Deployment Status (Kubeconfig/External)
+      when:
+        - trilio_kubernetes_auth_type != "password"
+        - trilio_kubernetes_cli | bool
+      ansible.builtin.shell: >
+        kubectl get po,pvc,svc -n {{ trilio_kubernetes_namespace }}
+      environment:
+        KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
+      register: trilio_kubernetes_deployment_available
+      ignore_errors: true
+      changed_when: trilio_kubernetes_deployment_available.rc != 0
+
+    - name: Application Deployment Status (OpenShift/Password)
+      when:
+        - trilio_kubernetes_auth_type == "password"
+        - trilio_kubernetes_distro == "openshift"
+        - trilio_kubernetes_cli | bool
+      ansible.builtin.shell: |
+        oc login "{{ trilio_kubernetes_auth_api }}" --token="{{ trilio_kubernetes_auth_results.openshift_auth.api_key }}" --insecure-skip-tls-verify=true
+        oc get po,pvc,svc -n {{ trilio_kubernetes_namespace }}
+      register: trilio_kubernetes_deployment_available
+      ignore_errors: true
+      changed_when: trilio_kubernetes_deployment_available.rc != 0
+
+    - name: Show application deployment status
+      ansible.builtin.debug:
+        var: trilio_kubernetes_deployment_available.stdout_lines

@@ -9,19 +9,10 @@
   tags: ['always']
 
 - name: Execute Continuous Restore Preparation Tasks
-  ansible.builtin.include_tasks: "trilio_kubernetes_continuous_restore_kubeconfig.yaml"
+  ansible.builtin.include_tasks: "trilio_kubernetes_continuous_restore_prep.yaml"
   when:
     - trilio_kubernetes_create_restore | bool
     - trilio_kubernetes_restore_type == "cr"
-    - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
-
-- name: Execute Continuous Restore Preparation Tasks (OpenShift)
-  ansible.builtin.include_tasks: "trilio_kubernetes_continuous_restore_password.yaml"
-  when:
-    - trilio_kubernetes_create_restore | bool
-    - trilio_kubernetes_restore_type == "cr"
-    - trilio_kubernetes_distro == 'openshift'
-    - trilio_kubernetes_auth_type == 'password'
 
 - name: Execute Restore Tasks
   ansible.builtin.include_tasks: "trilio_kubernetes_create_restore_tasks.yaml"
