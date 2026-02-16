@@ -60,6 +60,7 @@
   register: backups
   retries: "{{ trilio_kubernetes_backup_polling_retries }}"
   delay: "{{ trilio_kubernetes_restore_polling_every_seconds }}"
+  until: backups.resources is defined and
     backups.resources | length > 0 and
     backups.resources[0].status.status == 'Available'
   tags: ['backup', 'smoketest']
