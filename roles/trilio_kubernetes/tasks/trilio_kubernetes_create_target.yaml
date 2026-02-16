@@ -20,6 +20,7 @@
 
 - name: Set Auth Facts
   ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
+  tags: ['always']
 
 - name: Create Target
   ansible.builtin.include_tasks: "trilio_kubernetes_create_target_tasks.yaml"

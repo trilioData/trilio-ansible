@@ -6,6 +6,7 @@
 
 - name: Set Auth Facts
   ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
+  tags: ['always']
 
 - name: Create Namespace
   tags: ['namespace', 'ns', 'smoketest']

@@ -6,6 +6,7 @@
 
 - name: Set Auth Facts
   ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
+  tags: ['always']
 
 - name: Execute Continuous Restore Preparation Tasks
   ansible.builtin.include_tasks: "trilio_kubernetes_continuous_restore_kubeconfig.yaml"

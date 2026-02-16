@@ -1,5 +1,6 @@
 - name: Set Auth Facts
   ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
+  tags: ['always']
 
 - name: Checks for Kubernetes/OpenShift
   ansible.builtin.include_tasks: "trilio_kubernetes_check_tasks.yaml"

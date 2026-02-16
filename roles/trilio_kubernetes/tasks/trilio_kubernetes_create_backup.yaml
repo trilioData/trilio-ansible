@@ -10,6 +10,7 @@
 
 - name: Set Auth Facts
   ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
+  tags: ['always']
 
 - name: Create Backup
   ansible.builtin.include_tasks: "trilio_kubernetes_create_backup_tasks.yaml"
