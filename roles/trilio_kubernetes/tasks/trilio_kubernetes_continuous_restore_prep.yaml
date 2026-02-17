@@ -32,13 +32,13 @@
       changed_when: trilio_kubernetes_continuous_restore_policy_k8s.rc != 0
 
 
-    - name: Identify Last Consistent Set
+    - name: Identify Last Consistent Set in {{ trilio_kubernetes_continuous_restore_policy_k8s.stdout }}
       when: trilio_kubernetes_continuous_restore_policy_k8s.stdout | trim | length > 0
       ansible.builtin.shell: |
         set -o pipefail
         kubectl -s $K8S_AUTH_HOST --token="$K8S_AUTH_API_KEY" --insecure-skip-tls-verify \
-          get restore -n {{ trilio_kubernetes_restore_namespace }} \
-          {{ trilio_kubernetes_continuous_restore_policy_k8s.stdout }}-{{ ansible_date_time.date }} -o jsonpath='{.status.lastBoundConsistentSet}'
+          get consistentsets.triliovault.trilio.io | grep "{{ trilio_kubernetes_continuous_restore_policy_k8s.stdout }}" \
+          | awk '{print $8,$1}' | sort -n | tail -1 | awk '{print $2}'
       environment:
         KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
       register: trilio_kubernetes_continuous_restore_cs_k8s
@@ -50,7 +50,7 @@
       ansible.builtin.shell: |
         set -o pipefail
         kubectl -s $K8S_AUTH_HOST --token="$K8S_AUTH_API_KEY" --insecure-skip-tls-verify \
-          get consistentsets/{{ trilio_kubernetes_continuous_restore_cs_k8s.stdout }} \
+          get consistentsets.triliovault.trilio.io/{{ trilio_kubernetes_continuous_restore_cs_k8s.stdout }} \
           -o yaml | grep location: | head -1 | awk '{print $2}'
       environment:
         KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
@@ -62,7 +62,7 @@
       ansible.builtin.shell: |
         set -o pipefail
         kubectl -s $K8S_AUTH_HOST --token="$K8S_AUTH_API_KEY" --insecure-skip-tls-verify \
-          get consistentsets/{{ trilio_kubernetes_continuous_restore_cs_k8s.stdout }} \
+          get consistentsets.triliovault.trilio.io/{{ trilio_kubernetes_continuous_restore_cs_k8s.stdout }} \
           -o yaml | awk '/pvcSnapshotInfo:/ { getline;  sub(/:$/, ""); print $1 }'
       environment:
         KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
@@ -98,12 +98,11 @@
       ignore_errors: true
       changed_when: trilio_kubernetes_continuous_restore_policy_oc.rc != 0
 
-    - name: Identify Last Consistent Set
+    - name: Identify Last Consistent Set in {{ trilio_kubernetes_continuous_restore_policy_oc.stdout_lines }}
       when: trilio_kubernetes_continuous_restore_policy_oc.stdout | trim | length > 0
       ansible.builtin.shell: |
-        oc get restore -n {{ trilio_kubernetes_restore_namespace }} \
-          {{ trilio_kubernetes_continuous_restore_policy_oc.stdout }}-{{ ansible_date_time.date }} -o jsonpath='{.status.lastBoundConsistentSet}'
-      register: trilio_kubernetes_continuous_restore_cs_oc
+        set -o pipefail
+        oc get consistentsets.triliovault.trilio.io | grep "{{ trilio_kubernetes_continuous_restore_policy.stdout }}" | awk '{print $8,$1}' | sort -n | tail -1 | awk '{print $2}'
       changed_when: trilio_kubernetes_continuous_restore_cs_oc.rc != 0
       failed_when: trilio_kubernetes_continuous_restore_cs_oc.stdout == ""
 
@@ -111,7 +110,7 @@
       when: trilio_kubernetes_continuous_restore_cs_oc.stdout is defined and trilio_kubernetes_continuous_restore_cs_oc.stdout | length > 0
       ansible.builtin.shell: |
         set -o pipefail
-        oc get consistentsets/{{ trilio_kubernetes_continuous_restore_cs_oc.stdout }} \
+        oc get consistentsets.triliovault.trilio.io/{{ trilio_kubernetes_continuous_restore_cs_oc.stdout }} \
           -o yaml | grep location: | head -1 | awk '{print $2}'
       register: trilio_kubernetes_continuous_restore_location_oc
       changed_when: trilio_kubernetes_continuous_restore_location_oc.rc != 0
@@ -120,7 +119,7 @@
       when: trilio_kubernetes_continuous_restore_cs_oc.stdout is defined and trilio_kubernetes_continuous_restore_cs_oc.stdout | length > 0
       ansible.builtin.shell: |
         set -o pipefail
-        oc get consistentsets/{{ trilio_kubernetes_continuous_restore_cs_oc.stdout }} \
+        oc get consistentsets.triliovault.trilio.io/{{ trilio_kubernetes_continuous_restore_cs_oc.stdout }} \
           -o yaml | awk '/pvcSnapshotInfo:/ { getline;  sub(/:$/, ""); print $1 }'
       register: trilio_kubernetes_continuous_restore_pvc_oc
       changed_when: trilio_kubernetes_continuous_restore_pvc_oc.rc != 0
