@@ -27,44 +27,44 @@
         done
       environment:
         KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
-      register: trilio_kubernetes_continuous_restore_policy
+      register: trilio_kubernetes_continuous_restore_policy_k8s
       ignore_errors: true
       changed_when: false
 
     - name: Identify Last Consistent Set
-      when: trilio_kubernetes_continuous_restore_policy.stdout | trim | length > 0
+      when: trilio_kubernetes_continuous_restore_policy_k8s.stdout | trim | length > 0
       ansible.builtin.shell: |
         kubectl -s $K8S_AUTH_HOST --token="$K8S_AUTH_API_KEY" --insecure-skip-tls-verify \
           get restore -n {{ trilio_kubernetes_restore_namespace }} \
-          {{ trilio_kubernetes_continuous_restore_policy.stdout }}-{{ ansible_date_time.date }} -o jsonpath='{.status.lastBoundConsistentSet}'
+          {{ trilio_kubernetes_continuous_restore_policy_k8s.stdout }}-{{ ansible_date_time.date }} -o jsonpath='{.status.lastBoundConsistentSet}'
       environment:
         KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
-      register: trilio_kubernetes_continuous_restore_cs
+      register: trilio_kubernetes_continuous_restore_cs_k8s
       changed_when: false
-      failed_when: trilio_kubernetes_continuous_restore_cs.stdout == ""
+      failed_when: trilio_kubernetes_continuous_restore_cs_k8s.stdout == ""
 
     - name: Identify Location of Last Consistent Set
-      when: trilio_kubernetes_continuous_restore_cs.stdout is defined and trilio_kubernetes_continuous_restore_cs.stdout | length > 0
+      when: trilio_kubernetes_continuous_restore_cs_k8s.stdout is defined and trilio_kubernetes_continuous_restore_cs_k8s.stdout | length > 0
       ansible.builtin.shell: |
         set -o pipefail
         kubectl -s $K8S_AUTH_HOST --token="$K8S_AUTH_API_KEY" --insecure-skip-tls-verify \
-          get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }} \
+          get consistentsets/{{ trilio_kubernetes_continuous_restore_cs_k8s.stdout }} \
           -o yaml | grep location: | head -1 | awk '{print $2}'
       environment:
         KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
-      register: trilio_kubernetes_continuous_restore_location
+      register: trilio_kubernetes_continuous_restore_location_k8s
       changed_when: false
 
     - name: Identify PVC of Last Consistent Set
-      when: trilio_kubernetes_continuous_restore_cs.stdout is defined and trilio_kubernetes_continuous_restore_cs.stdout | length > 0
+      when: trilio_kubernetes_continuous_restore_cs_k8s.stdout is defined and trilio_kubernetes_continuous_restore_cs_k8s.stdout | length > 0
       ansible.builtin.shell: |
         set -o pipefail
         kubectl -s $K8S_AUTH_HOST --token="$K8S_AUTH_API_KEY" --insecure-skip-tls-verify \
-          get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }} \
+          get consistentsets/{{ trilio_kubernetes_continuous_restore_cs_k8s.stdout }} \
           -o yaml | awk '/pvcSnapshotInfo:/ { getline;  sub(/:$/, ""); print $1 }'
       environment:
         KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
-      register: trilio_kubernetes_continuous_restore_pvc
+      register: trilio_kubernetes_continuous_restore_pvc_k8s
       changed_when: false
 
 - name: Identify Continuous Restore Policy (OpenShift Password)
@@ -92,33 +92,44 @@
             break
           fi
         done
-      register: trilio_kubernetes_continuous_restore_policy
+      register: trilio_kubernetes_continuous_restore_policy_oc
       ignore_errors: true
       changed_when: false
 
     - name: Identify Last Consistent Set
-      when: trilio_kubernetes_continuous_restore_policy.stdout | trim | length > 0
+      when: trilio_kubernetes_continuous_restore_policy_oc.stdout | trim | length > 0
       ansible.builtin.shell: |
         oc get restore -n {{ trilio_kubernetes_restore_namespace }} \
-          {{ trilio_kubernetes_continuous_restore_policy.stdout }}-{{ ansible_date_time.date }} -o jsonpath='{.status.lastBoundConsistentSet}'
-      register: trilio_kubernetes_continuous_restore_cs
+          {{ trilio_kubernetes_continuous_restore_policy_oc.stdout }}-{{ ansible_date_time.date }} -o jsonpath='{.status.lastBoundConsistentSet}'
+      register: trilio_kubernetes_continuous_restore_cs_oc
       changed_when: false
-      failed_when: trilio_kubernetes_continuous_restore_cs.stdout == ""
+      failed_when: trilio_kubernetes_continuous_restore_cs_oc.stdout == ""
 
     - name: Identify Location of Last Consistent Set
-      when: trilio_kubernetes_continuous_restore_cs.stdout is defined and trilio_kubernetes_continuous_restore_cs.stdout | length > 0
+      when: trilio_kubernetes_continuous_restore_cs_oc.stdout is defined and trilio_kubernetes_continuous_restore_cs_oc.stdout | length > 0
       ansible.builtin.shell: |
         set -o pipefail
-        oc get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }} \
+        oc get consistentsets/{{ trilio_kubernetes_continuous_restore_cs_oc.stdout }} \
           -o yaml | grep location: | head -1 | awk '{print $2}'
-      register: trilio_kubernetes_continuous_restore_location
+      register: trilio_kubernetes_continuous_restore_location_oc
       changed_when: false
 
     - name: Identify PVC of Last Consistent Set
-      when: trilio_kubernetes_continuous_restore_cs.stdout is defined and trilio_kubernetes_continuous_restore_cs.stdout | length > 0
+      when: trilio_kubernetes_continuous_restore_cs_oc.stdout is defined and trilio_kubernetes_continuous_restore_cs_oc.stdout | length > 0
       ansible.builtin.shell: |
         set -o pipefail
-        oc get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }} \
+        oc get consistentsets/{{ trilio_kubernetes_continuous_restore_cs_oc.stdout }} \
           -o yaml | awk '/pvcSnapshotInfo:/ { getline;  sub(/:$/, ""); print $1 }'
-      register: trilio_kubernetes_continuous_restore_pvc
+      register: trilio_kubernetes_continuous_restore_pvc_oc
       changed_when: false
+
+- name: Set Continuous Restore Facts
+  tags: ['restore']
+  when:
+    - trilio_kubernetes_create_restore | bool
+    - trilio_kubernetes_restore_type == "cr"
+  ansible.builtin.set_fact:
+    trilio_kubernetes_continuous_restore_policy: "{{ trilio_kubernetes_continuous_restore_policy_k8s if (trilio_kubernetes_continuous_restore_policy_k8s is defined and not trilio_kubernetes_continuous_restore_policy_k8s.skipped | default(false)) else trilio_kubernetes_continuous_restore_policy_oc }}"
+    trilio_kubernetes_continuous_restore_cs: "{{ trilio_kubernetes_continuous_restore_cs_k8s if (trilio_kubernetes_continuous_restore_cs_k8s is defined and not trilio_kubernetes_continuous_restore_cs_k8s.skipped | default(false)) else trilio_kubernetes_continuous_restore_cs_oc }}"
+    trilio_kubernetes_continuous_restore_location: "{{ trilio_kubernetes_continuous_restore_location_k8s if (trilio_kubernetes_continuous_restore_location_k8s is defined and not trilio_kubernetes_continuous_restore_location_k8s.skipped | default(false)) else trilio_kubernetes_continuous_restore_location_oc }}"
+    trilio_kubernetes_continuous_restore_pvc: "{{ trilio_kubernetes_continuous_restore_pvc_k8s if (trilio_kubernetes_continuous_restore_pvc_k8s is defined and not trilio_kubernetes_continuous_restore_pvc_k8s.skipped | default(false)) else trilio_kubernetes_continuous_restore_pvc_oc }}"
