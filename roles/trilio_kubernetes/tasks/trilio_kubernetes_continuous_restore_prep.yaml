@@ -44,14 +44,14 @@
         {{ trilio_kubernetes_continuous_restore_policy.stdout }} -o jsonpath='{.status.lastBoundConsistentSet}'
       environment:
         KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
-      register: trilio_kubernetes_continuous_restore_last_bound_consistent_set
+      register: trilio_kubernetes_continuous_restore_cs
       changed_when: false
-      failed_when: trilio_kubernetes_continuous_restore_last_bound_consistent_set.stdout == ""
+      failed_when: trilio_kubernetes_continuous_restore_cs.stdout == ""
 
     - name: Identify Location of Last Consistent Set
       ansible.builtin.shell: >
         set -o pipefail
-        {{ trilio_k8s_cmd }} {{ trilio_k8s_auth_args }} get consistentsets/{{ trilio_kubernetes_continuous_restore_last_bound_consistent_set.stdout }}
+        {{ trilio_k8s_cmd }} {{ trilio_k8s_auth_args }} get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }}
         -o yaml | grep location: | head -1 | awk '{print $2}'
       environment:
         KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
@@ -61,7 +61,7 @@
     - name: Identify PVC of Last Consistent Set
       ansible.builtin.shell: >
         set -o pipefail
-        {{ trilio_k8s_cmd }} {{ trilio_k8s_auth_args }} get consistentsets/{{ trilio_kubernetes_continuous_restore_last_bound_consistent_set.stdout }}
+        {{ trilio_k8s_cmd }} {{ trilio_k8s_auth_args }} get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }}
         -o yaml | awk '/pvcSnapshotInfo:/ { getline;  sub(/:$/, ""); print $1 }'
       environment:
         KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
