@@ -1,31 +1,22 @@
 # code: language=ansible
 # Tasks for Continuous Restore Preparation
 
-- name: Set Kubernetes Command and Auth Args
-  tags: ['restore']
-  ansible.builtin.set_fact:
-    trilio_k8s_cmd: "{{ 'oc' if trilio_kubernetes_distro == 'openshift' else 'kubectl' }}"
-    trilio_k8s_auth_args: >-
-      {{
-        '--token="' + trilio_kubernetes_auth_results.openshift_auth.api_key + '" --server="' + trilio_kubernetes_auth_api + '" --insecure-skip-tls-verify=true'
-        if trilio_kubernetes_auth_type == 'password'
-        else ''
-      }}
-
-- name: Continuous Restore Preparation Tasks
+- name: Identify Continuous Restore Policy (Kubeconfig/External)
   tags: ['restore']
   when:
     - trilio_kubernetes_create_restore | bool
     - trilio_kubernetes_restore_type == "cr"
+    - trilio_kubernetes_auth_type == "external" or trilio_kubernetes_auth_type == "kubeconfig"
   block:
     - name: Identify Continuous Restore Policy
       ansible.builtin.shell: |
         set -o pipefail
-        {{ trilio_k8s_cmd }} {{ trilio_k8s_auth_args }} get continuousrestoreplan.triliovault.trilio.io \
+        kubectl -s $K8S_AUTH_HOST --token="$K8S_AUTH_API_KEY" --insecure-skip-tls-verify \
+          get continuousrestoreplan.triliovault.trilio.io \
           --no-headers -o custom-columns=":metadata.name" | awk '/Available/ {print $1}' \
         | while read CRP
         do
-          CRP_MATCH=$({{ trilio_k8s_cmd }} {{ trilio_k8s_auth_args }} \
+          CRP_MATCH=$(kubectl -s $K8S_AUTH_HOST --token="$K8S_AUTH_API_KEY" --insecure-skip-tls-verify \
             get continuousrestoreplan.triliovault.trilio.io/$CRP -o yaml \
             | grep "{{ trilio_kubernetes_restore_namespace }}/{{ trilio_kubernetes_backupplan_name }}")
           if [[ -n "$CRP_MATCH" ]]
@@ -42,7 +33,8 @@
 
     - name: Identify Last Consistent Set
       ansible.builtin.shell: >
-        {{ trilio_k8s_cmd }} {{ trilio_k8s_auth_args }} get restore -n {{ trilio_kubernetes_restore_namespace }}
+        kubectl -s $K8S_AUTH_HOST --token="$K8S_AUTH_API_KEY" --insecure-skip-tls-verify \
+          get restore -n {{ trilio_kubernetes_restore_namespace }}
         {{ trilio_kubernetes_continuous_restore_policy.stdout }} -o jsonpath='{.status.lastBoundConsistentSet}'
       environment:
         KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
@@ -53,7 +45,8 @@
     - name: Identify Location of Last Consistent Set
       ansible.builtin.shell: >
         set -o pipefail
-        {{ trilio_k8s_cmd }} {{ trilio_k8s_auth_args }} get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }}
+        kubectl -s $K8S_AUTH_HOST --token="$K8S_AUTH_API_KEY" --insecure-skip-tls-verify \
+          get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }}
         -o yaml | grep location: | head -1 | awk '{print $2}'
       environment:
         KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
@@ -63,9 +56,63 @@
     - name: Identify PVC of Last Consistent Set
       ansible.builtin.shell: >
         set -o pipefail
-        {{ trilio_k8s_cmd }} {{ trilio_k8s_auth_args }} get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }}
+        kubectl -s $K8S_AUTH_HOST --token="$K8S_AUTH_API_KEY" --insecure-skip-tls-verify \
+          get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }}
         -o yaml | awk '/pvcSnapshotInfo:/ { getline;  sub(/:$/, ""); print $1 }'
       environment:
         KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
+      register: trilio_kubernetes_continuous_restore_pvc
+      changed_when: false
+
+- name: Identify Continuous Restore Policy (OpenShift Password)
+  tags: ['restore']
+  when:
+    - trilio_kubernetes_create_restore | bool
+    - trilio_kubernetes_restore_type == "cr"
+    - trilio_kubernetes_auth_type == "password"
+    - trilio_kubernetes_distro == "openshift"
+  block:
+    - name: Identify Continuous Restore Policy
+      ansible.builtin.shell: |
+        set -o pipefail
+        oc login "{{ trilio_kubernetes_auth_api }}" --token="{{ trilio_kubernetes_auth_results.openshift_auth.api_key }}" \
+          --insecure-skip-tls-verify=true 2>&/dev/null
+        oc get continuousrestoreplan.triliovault.trilio.io \
+          --no-headers -o custom-columns=":metadata.name" | awk '/Available/ {print $1}' \
+        | while read CRP
+        do
+          CRP_MATCH=$(oc get continuousrestoreplan.triliovault.trilio.io/$CRP -o yaml \
+            | grep "{{ trilio_kubernetes_restore_namespace }}/{{ trilio_kubernetes_backupplan_name }}")
+          if [[ -n "$CRP_MATCH" ]]
+          then
+            echo "$CRP"
+            break
+          fi
+        done
+      register: trilio_kubernetes_continuous_restore_policy
+      ignore_errors: true
+      changed_when: false
+
+    - name: Identify Last Consistent Set
+      ansible.builtin.shell: >
+        oc get restore -n {{ trilio_kubernetes_restore_namespace }}
+        {{ trilio_kubernetes_continuous_restore_policy.stdout }} -o jsonpath='{.status.lastBoundConsistentSet}'
+      register: trilio_kubernetes_continuous_restore_cs
+      changed_when: false
+      failed_when: trilio_kubernetes_continuous_restore_cs.stdout == ""
+
+    - name: Identify Location of Last Consistent Set
+      ansible.builtin.shell: >
+        set -o pipefail
+        oc get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }}
+        -o yaml | grep location: | head -1 | awk '{print $2}'
+      register: trilio_kubernetes_continuous_restore_location
+      changed_when: false
+
+    - name: Identify PVC of Last Consistent Set
+      ansible.builtin.shell: >
+        set -o pipefail
+        oc get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }}
+        -o yaml | awk '/pvcSnapshotInfo:/ { getline;  sub(/:$/, ""); print $1 }'
       register: trilio_kubernetes_continuous_restore_pvc
       changed_when: false
