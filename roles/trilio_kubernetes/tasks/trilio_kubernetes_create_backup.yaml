@@ -18,8 +18,8 @@
   vars:
     trilio_kubernetes_namespace_var: "{{ item }}"
     trilio_kubernetes_backupplan_name_var: >-
-      {{ trilio_kubernetes_backupplan_name 
-         if (trilio_kubernetes_backupplan_override | bool) 
+      {{ trilio_kubernetes_backupplan_name
+         if (trilio_kubernetes_backupplan_override | bool)
          else (item ~ '-' ~ trilio_kubernetes_backupplan_type) }}
     trilio_kubernetes_backup_timestamp: "{{ ansible_date_time.date }}-{{ ansible_date_time.epoch }}"
   loop: "{{ trilio_kubernetes_backup_namespaces | batch(trilio_kubernetes_backup_batch_size) }}"

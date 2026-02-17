@@ -1,12 +1,6 @@
 # code: language=ansible
 # Tasks for Continuous Restore Preparation
 
-# code: language=ansible
-# Tasks for Continuous Restore Preparation
-
-# code: language=ansible
-# Tasks for Continuous Restore Preparation
-
 - name: Set Kubernetes Command and Auth Args
   ansible.builtin.set_fact:
     trilio_k8s_cmd: "{{ 'oc' if trilio_kubernetes_distro == 'openshift' else 'kubectl' }}"
