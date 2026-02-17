@@ -32,10 +32,11 @@
       changed_when: false
 
     - name: Identify Last Consistent Set
-      ansible.builtin.shell: >
+      when: trilio_kubernetes_continuous_restore_policy.stdout | trim | length > 0
+      ansible.builtin.shell: |
         kubectl -s $K8S_AUTH_HOST --token="$K8S_AUTH_API_KEY" --insecure-skip-tls-verify \
-          get restore -n {{ trilio_kubernetes_restore_namespace }}
-        {{ trilio_kubernetes_continuous_restore_policy.stdout }} -o jsonpath='{.status.lastBoundConsistentSet}'
+          get restore -n {{ trilio_kubernetes_restore_namespace }} \
+          {{ trilio_kubernetes_continuous_restore_policy.stdout }}-{{ ansible_date_time.date }} -o jsonpath='{.status.lastBoundConsistentSet}'
       environment:
         KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
       register: trilio_kubernetes_continuous_restore_cs
@@ -43,22 +44,24 @@
       failed_when: trilio_kubernetes_continuous_restore_cs.stdout == ""
 
     - name: Identify Location of Last Consistent Set
-      ansible.builtin.shell: >
+      when: trilio_kubernetes_continuous_restore_cs.stdout is defined and trilio_kubernetes_continuous_restore_cs.stdout | length > 0
+      ansible.builtin.shell: |
         set -o pipefail
         kubectl -s $K8S_AUTH_HOST --token="$K8S_AUTH_API_KEY" --insecure-skip-tls-verify \
-          get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }}
-        -o yaml | grep location: | head -1 | awk '{print $2}'
+          get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }} \
+          -o yaml | grep location: | head -1 | awk '{print $2}'
       environment:
         KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
       register: trilio_kubernetes_continuous_restore_location
       changed_when: false
 
     - name: Identify PVC of Last Consistent Set
-      ansible.builtin.shell: >
+      when: trilio_kubernetes_continuous_restore_cs.stdout is defined and trilio_kubernetes_continuous_restore_cs.stdout | length > 0
+      ansible.builtin.shell: |
         set -o pipefail
         kubectl -s $K8S_AUTH_HOST --token="$K8S_AUTH_API_KEY" --insecure-skip-tls-verify \
-          get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }}
-        -o yaml | awk '/pvcSnapshotInfo:/ { getline;  sub(/:$/, ""); print $1 }'
+          get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }} \
+          -o yaml | awk '/pvcSnapshotInfo:/ { getline;  sub(/:$/, ""); print $1 }'
       environment:
         KUBECONFIG: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
       register: trilio_kubernetes_continuous_restore_pvc
@@ -94,25 +97,28 @@
       changed_when: false
 
     - name: Identify Last Consistent Set
-      ansible.builtin.shell: >
-        oc get restore -n {{ trilio_kubernetes_restore_namespace }}
-        {{ trilio_kubernetes_continuous_restore_policy.stdout }} -o jsonpath='{.status.lastBoundConsistentSet}'
+      when: trilio_kubernetes_continuous_restore_policy.stdout | trim | length > 0
+      ansible.builtin.shell: |
+        oc get restore -n {{ trilio_kubernetes_restore_namespace }} \
+          {{ trilio_kubernetes_continuous_restore_policy.stdout }}-{{ ansible_date_time.date }} -o jsonpath='{.status.lastBoundConsistentSet}'
       register: trilio_kubernetes_continuous_restore_cs
       changed_when: false
       failed_when: trilio_kubernetes_continuous_restore_cs.stdout == ""
 
     - name: Identify Location of Last Consistent Set
-      ansible.builtin.shell: >
+      when: trilio_kubernetes_continuous_restore_cs.stdout is defined and trilio_kubernetes_continuous_restore_cs.stdout | length > 0
+      ansible.builtin.shell: |
         set -o pipefail
-        oc get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }}
-        -o yaml | grep location: | head -1 | awk '{print $2}'
+        oc get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }} \
+          -o yaml | grep location: | head -1 | awk '{print $2}'
       register: trilio_kubernetes_continuous_restore_location
       changed_when: false
 
     - name: Identify PVC of Last Consistent Set
-      ansible.builtin.shell: >
+      when: trilio_kubernetes_continuous_restore_cs.stdout is defined and trilio_kubernetes_continuous_restore_cs.stdout | length > 0
+      ansible.builtin.shell: |
         set -o pipefail
-        oc get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }}
-        -o yaml | awk '/pvcSnapshotInfo:/ { getline;  sub(/:$/, ""); print $1 }'
+        oc get consistentsets/{{ trilio_kubernetes_continuous_restore_cs.stdout }} \
+          -o yaml | awk '/pvcSnapshotInfo:/ { getline;  sub(/:$/, ""); print $1 }'
       register: trilio_kubernetes_continuous_restore_pvc
       changed_when: false
