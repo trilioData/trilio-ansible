@@ -2,6 +2,7 @@
 # Tasks for Continuous Restore Preparation
 
 - name: Set Kubernetes Command and Auth Args
+  tags: ['restore']
   ansible.builtin.set_fact:
     trilio_k8s_cmd: "{{ 'oc' if trilio_kubernetes_distro == 'openshift' else 'kubectl' }}"
     trilio_k8s_auth_args: >-
@@ -12,6 +13,7 @@
       }}
 
 - name: Continuous Restore Preparation Tasks
+  tags: ['restore']
   when:
     - trilio_kubernetes_create_restore | bool
     - trilio_kubernetes_restore_type == "cr"
