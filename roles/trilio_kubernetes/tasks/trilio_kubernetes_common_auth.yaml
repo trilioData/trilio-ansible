@@ -7,10 +7,27 @@
     k8s_auth_host: "{{ trilio_kubernetes_host }}"
     k8s_validate_certs: false
   when: trilio_kubernetes_auth_type == 'password'
-  tags: ['always']
+  tags: ["always"]
 
 - name: Set Auth Facts (Kubeconfig/External)
   ansible.builtin.set_fact:
     k8s_validate_certs: false
   when: trilio_kubernetes_auth_type != 'password'
-  tags: ['always']
+  tags: ["always"]
+
+- name: Verify Authentication
+  kubernetes.core.k8s_info:
+    kind: Namespace
+    api_key: "{{ k8s_auth_api_key | default(omit) }}"
+    host: "{{ k8s_auth_host | default(omit) }}"
+    validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+    kubeconfig: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
+  register: auth_verification
+  ignore_errors: true
+  tags: ["always"]
+
+- name: Fail if Authentication Failed
+  ansible.builtin.fail:
+    msg: "Authentication failed. Please check your credentials, token, or kubeconfig."
+  when: auth_verification.failed
+  tags: ["always"]
