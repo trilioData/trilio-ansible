@@ -3,10 +3,10 @@
 
 - name: Set Auth Facts
   ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
-  tags: ['always']
+  tags: ["always"]
 
 - name: Basic Kubernetes Checks
-  tags: ['check', 'smoketest']
+  tags: ["check", "smoketest"]
   block:
     - name: Check for kubectl
       ansible.builtin.stat:
@@ -14,7 +14,7 @@
       register: trilio_kubernetes_kubectl
 
 - name: Basic OpenShift Checks
-  tags: ['check', 'smoketest']
+  tags: ["check", "smoketest"]
   when: trilio_kubernetes_distro == "openshift"
   block:
     - name: Check for oc
@@ -23,7 +23,7 @@
       register: trilio_kubernetes_oc
 
 - name: Trilio for Kubernetes Prerequisite Checks
-  tags: ['check', 'smoketest']
+  tags: ["check", "smoketest"]
   block:
     - name: Checking for Trilio License
       kubernetes.core.k8s_info:
@@ -33,6 +33,7 @@
         validate_certs: "{{ k8s_validate_certs | default(omit) }}"
         api_key: "{{ k8s_auth_api_key | default(omit) }}"
         host: "{{ k8s_auth_host | default(omit) }}"
+        kubeconfig: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
       register: trilio_kubernetes_license
 
     - name: Checking for CSI Drivers
@@ -42,6 +43,7 @@
         validate_certs: "{{ k8s_validate_certs | default(omit) }}"
         api_key: "{{ k8s_auth_api_key | default(omit) }}"
         host: "{{ k8s_auth_host | default(omit) }}"
+        kubeconfig: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
       register: trilio_kubernetes_csidrivers
 
     - name: Checking for VolumeSnapshot CRD
@@ -52,6 +54,7 @@
         validate_certs: "{{ k8s_validate_certs | default(omit) }}"
         api_key: "{{ k8s_auth_api_key | default(omit) }}"
         host: "{{ k8s_auth_host | default(omit) }}"
+        kubeconfig: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
       register: trilio_kubernetes_volumesnapshot
 
     - name: Checking for VolumeSnapshotClass CRD
@@ -62,6 +65,7 @@
         validate_certs: "{{ k8s_validate_certs | default(omit) }}"
         api_key: "{{ k8s_auth_api_key | default(omit) }}"
         host: "{{ k8s_auth_host | default(omit) }}"
+        kubeconfig: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
       register: trilio_kubernetes_volumesnapshotclasses
 
     - name: Checking for VolumeSnapshotContent CRD
@@ -72,9 +76,10 @@
         validate_certs: "{{ k8s_validate_certs | default(omit) }}"
         api_key: "{{ k8s_auth_api_key | default(omit) }}"
         host: "{{ k8s_auth_host | default(omit) }}"
+        kubeconfig: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
       register: trilio_kubernetes_volumesnapshotcontent
 
   rescue:
     - name: Warn user on TVK errors
       ansible.builtin.debug:
-        msg: 'Unable to perform TVK checks'
+        msg: "Unable to perform TVK checks"

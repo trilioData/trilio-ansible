@@ -9,7 +9,7 @@
     src: templates/backup.yaml.j2
     dest: /tmp/{{ trilio_kubernetes_backupplan_name_var }}-backup.yaml
     mode: "0600"
-  tags: ['backup', 'smoketest']
+  tags: ["backup", "smoketest"]
   loop: "{{ namespaces_batch }}"
 
 # Create the specified backup plan in specifed namespace
@@ -18,6 +18,7 @@
     api_key: "{{ k8s_auth_api_key | default(omit) }}"
     host: "{{ k8s_auth_host | default(omit) }}"
     validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+    kubeconfig: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
     api_version: "triliovault.trilio.io/v1"
     kind: Backup
     state: present
@@ -27,7 +28,7 @@
     wait_sleep: "{{ trilio_kubernetes_backup_polling_every_seconds }}"
     wait_timeout: "{{ trilio_kubernetes_backup_polling_retries }}"
   register: trilio_kubernetes_backup
-  tags: ['backup', 'smoketest']
+  tags: ["backup", "smoketest"]
   loop: "{{ namespaces_batch }}"
 
 - name: Wait for backups to complete "{{ item }}"
@@ -39,6 +40,7 @@
     api_key: "{{ k8s_auth_api_key | default(omit) }}"
     host: "{{ k8s_auth_host | default(omit) }}"
     validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+    kubeconfig: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
     api_version: "triliovault.trilio.io/v1"
     kind: Backup
     namespace: "{{ item }}"
@@ -49,5 +51,5 @@
   until: backups.resources is defined and
     backups.resources | length > 0 and
     backups.resources[0].status.status == 'Available'
-  tags: ['backup', 'smoketest']
+  tags: ["backup", "smoketest"]
   loop: "{{ namespaces_batch }}"

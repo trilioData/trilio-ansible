@@ -3,12 +3,12 @@
 
 - name: Set Auth Facts
   ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
-  tags: ['always']
+  tags: ["always"]
 
 - name: Deploy Application Block
   when:
     - trilio_kubernetes_deploy_demo_app | bool
-  tags: ['deploy_app', 'smoketest']
+  tags: ["deploy_app", "smoketest"]
   vars:
     trilio_kubernetes_namespace_var: "{{ trilio_kubernetes_namespace }}"
   block:
@@ -22,6 +22,7 @@
         validate_certs: "{{ k8s_validate_certs | default(omit) }}"
         api_key: "{{ k8s_auth_api_key | default(omit) }}"
         host: "{{ k8s_auth_host | default(omit) }}"
+        kubeconfig: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
         src: "{{ trilio_kubernetes_demo_app_yaml }}"
         wait: true
       register: trilio_kubernetes_app_deployment

@@ -102,7 +102,8 @@
       when: trilio_kubernetes_continuous_restore_policy_oc.stdout | trim | length > 0
       ansible.builtin.shell: |
         set -o pipefail
-        oc get consistentsets.triliovault.trilio.io | grep "{{ trilio_kubernetes_continuous_restore_policy.stdout }}" | awk '{print $8,$1}' | sort -n | tail -1 | awk '{print $2}'
+        oc get consistentsets.triliovault.trilio.io | grep "{{ trilio_kubernetes_continuous_restore_policy.stdout }}" \
+         | awk '{print $8,$1}' | sort -n | tail -1 | awk '{print $2}'
       changed_when: trilio_kubernetes_continuous_restore_cs_oc.rc != 0
       failed_when: trilio_kubernetes_continuous_restore_cs_oc.stdout == ""
 
@@ -130,7 +131,23 @@
     - trilio_kubernetes_create_restore | bool
     - trilio_kubernetes_restore_type == "cr"
   ansible.builtin.set_fact:
-    trilio_kubernetes_continuous_restore_policy_name: "{{ trilio_kubernetes_continuous_restore_policy_k8s.stdout if (trilio_kubernetes_continuous_restore_policy_k8s is defined and not trilio_kubernetes_continuous_restore_policy_k8s.skipped | default(false)) else (trilio_kubernetes_continuous_restore_policy_oc.stdout | default('')) }}"
-    trilio_kubernetes_continuous_restore_cs_name: "{{ trilio_kubernetes_continuous_restore_cs_k8s.stdout if (trilio_kubernetes_continuous_restore_cs_k8s is defined and not trilio_kubernetes_continuous_restore_cs_k8s.skipped | default(false)) else (trilio_kubernetes_continuous_restore_cs_oc.stdout | default('')) }}"
-    trilio_kubernetes_location_id: "{{ trilio_kubernetes_continuous_restore_location_k8s.stdout if (trilio_kubernetes_continuous_restore_location_k8s is defined and not trilio_kubernetes_continuous_restore_location_k8s.skipped | default(false)) else (trilio_kubernetes_continuous_restore_location_oc.stdout | default('')) }}"
-    trilio_kubernetes_event_target: "{{ trilio_kubernetes_continuous_restore_pvc_k8s.stdout if (trilio_kubernetes_continuous_restore_pvc_k8s is defined and not trilio_kubernetes_continuous_restore_pvc_k8s.skipped | default(false)) else (trilio_kubernetes_continuous_restore_pvc_oc.stdout | default('')) }}"
+    trilio_kubernetes_continuous_restore_policy_name: >-
+      {{ trilio_kubernetes_continuous_restore_policy_k8s.stdout
+      if (trilio_kubernetes_continuous_restore_policy_k8s is defined
+      and not trilio_kubernetes_continuous_restore_policy_k8s.skipped | default(false))
+      else (trilio_kubernetes_continuous_restore_policy_oc.stdout | default('')) }}
+    trilio_kubernetes_continuous_restore_cs_name: >-
+      {{ trilio_kubernetes_continuous_restore_cs_k8s.stdout
+      if (trilio_kubernetes_continuous_restore_cs_k8s is defined
+      and not trilio_kubernetes_continuous_restore_cs_k8s.skipped | default(false))
+      else (trilio_kubernetes_continuous_restore_cs_oc.stdout | default('')) }}
+    trilio_kubernetes_location_id: >-
+      {{ trilio_kubernetes_continuous_restore_location_k8s.stdout
+      if (trilio_kubernetes_continuous_restore_location_k8s is defined
+      and not trilio_kubernetes_continuous_restore_location_k8s.skipped | default(false))
+      else (trilio_kubernetes_continuous_restore_location_oc.stdout | default('')) }}
+    trilio_kubernetes_event_target: >-
+      {{ trilio_kubernetes_continuous_restore_pvc_k8s.stdout
+      if (trilio_kubernetes_continuous_restore_pvc_k8s is defined
+      and not trilio_kubernetes_continuous_restore_pvc_k8s.skipped | default(false))
+      else (trilio_kubernetes_continuous_restore_pvc_oc.stdout | default('')) }}

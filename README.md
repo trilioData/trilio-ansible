@@ -4,6 +4,11 @@ Set of Ansible Roles and Playbooks for Trilio Cloud-Native Intelligent Recovery 
 # Python version compatibility
 This collection requires Python 3.7 or greater.
 
+# Requirements
+This collection requires the following Python libraries:
+* jmespath
+
+
 # Using this collection
 You can install this collection using the ansible-galaxy tool:
 

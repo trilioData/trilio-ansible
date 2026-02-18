@@ -10,6 +10,7 @@
     api_key: "{{ k8s_auth_api_key | default(omit) }}"
     host: "{{ k8s_auth_host | default(omit) }}"
     validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+    kubeconfig: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
     state: present
 
 # For OpenShift we need to ensure the correct SCC is allowed
@@ -37,4 +38,5 @@
     api_key: "{{ k8s_auth_api_key | default(omit) }}"
     host: "{{ k8s_auth_host | default(omit) }}"
     validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+    kubeconfig: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
   register: trilio_kubernetes_scc
