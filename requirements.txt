@@ -1,1 +1,4 @@
 jmespath
+requests-oauthlib
+kubernetes
+openshift
