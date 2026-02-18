@@ -12,6 +12,13 @@
   ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
   tags: ["always"]
 
+- name: Normalize backup namespaces list
+  ansible.builtin.set_fact:
+    trilio_kubernetes_backup_namespaces_list: >-
+      {{ trilio_kubernetes_backup_namespaces | from_yaml
+      if trilio_kubernetes_backup_namespaces is string
+      else trilio_kubernetes_backup_namespaces }}
+
 - name: Create Backup
   ansible.builtin.include_tasks: "trilio_kubernetes_create_backup_tasks.yaml"
   tags: ["backup", "smoketest"]
@@ -22,9 +29,6 @@
          if (trilio_kubernetes_backupplan_override | bool)
          else (item ~ '-' ~ trilio_kubernetes_backupplan_type) }}
     trilio_kubernetes_backup_timestamp: "{{ ansible_date_time.date }}-{{ ansible_date_time.epoch }}"
-  loop: "{{ (trilio_kubernetes_backup_namespaces | from_yaml
-    if trilio_kubernetes_backup_namespaces is string
-    else trilio_kubernetes_backup_namespaces)
-    | batch(trilio_kubernetes_backup_batch_size) }}"
+  loop: "{{ trilio_kubernetes_backup_namespaces_list | batch(trilio_kubernetes_backup_batch_size | int) }}"
   loop_control:
     loop_var: namespaces_batch
