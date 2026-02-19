@@ -7,69 +7,75 @@
 - name: Authentication to Kubernetes
   ansible.builtin.include_tasks: trilio_kubernetes_auth.yaml
   # tags: ['always', 'auth']
-  tags: ['auth']
+  tags: ["auth"]
   when: trilio_kubernetes_auth | bool
 
 - name: Basic Trilio for Kubernetes Checks
   ansible.builtin.include_tasks: trilio_kubernetes_check.yaml
-  tags: ['check']
+  tags: ["check"]
   when: trilio_kubernetes_check | bool
 
 - name: Namespace Multi-Select List Definition
-  tags: ['target', 'ns', 'namespace', 'backup', 'backupplan', 'smoketest']
+  tags: ["target", "ns", "namespace", "backup", "backupplan", "smoketest"]
   when:
     - trilio_kubernetes_namespace_multitext is defined
+    - trilio_kubernetes_namespace_multitext | length > 0
   ansible.builtin.set_fact:
     trilio_kubernetes_backup_namespaces: "{{ trilio_kubernetes_namespace_multitext.split('\n') }}"
 
 - name: Searching for Backup Recommendations
   ansible.builtin.include_tasks: trilio_kubernetes_suggest.yaml
-  tags: ['never', 'suggest', 'search', 'autoprotect']
+  tags: ["never", "suggest", "search", "autoprotect"]
   when: trilio_kubernetes_suggest | bool
 
 - name: Trilio for Kubernetes Create Namespace
   ansible.builtin.include_tasks: trilio_kubernetes_create_ns.yaml
-  tags: ['namespace', 'ns']
+  tags: ["namespace", "ns"]
   when: trilio_kubernetes_create_namespace | bool
 
 - name: Trilio for Kubernetes Deploy App
   ansible.builtin.include_tasks: trilio_kubernetes_deploy_app.yaml
-  tags: ['never', 'deploy_app']
+  tags: ["never", "deploy_app"]
   when: trilio_kubernetes_deploy_demo_app | bool
 
 - name: Trilio for Kubernetes Create Secret
   ansible.builtin.include_tasks: trilio_kubernetes_create_secret.yaml
-  tags: ['secret']
+  tags: ["secret"]
   when: trilio_kubernetes_create_secret | bool
 
 - name: Trilio for Kubernetes Create Target
   ansible.builtin.include_tasks: trilio_kubernetes_create_target.yaml
-  tags: ['target']
+  tags: ["target"]
   when: trilio_kubernetes_create_target | bool
 
 - name: Trilio for Kubernetes Create Backup Plan
   ansible.builtin.include_tasks: trilio_kubernetes_create_backupplan.yaml
-  tags: ['backupplan']
+  tags: ["backupplan"]
   when: trilio_kubernetes_create_backupplan | bool
 
 - name: Trilio for Kubernetes Execute a Backup
   ansible.builtin.include_tasks: trilio_kubernetes_create_backup.yaml
-  tags: ['backup']
+  tags: ["backup"]
   when: trilio_kubernetes_create_backup | bool
+
+- name: Optional Delay Before Restore
+  ansible.builtin.include_tasks: trilio_kubernetes_delay.yaml
+  when: trilio_kubernetes_delay_enabled | default(false) | bool
+  tags: ["delay"]
 
 - name: Trilio for Kubernetes Perform Restore
   ansible.builtin.include_tasks: trilio_kubernetes_create_restore.yaml
-  tags: ['never', 'restore']
+  tags: ["never", "restore"]
   when: trilio_kubernetes_create_restore | bool
 
 - name: Trilio for Kubernetes Smoketest
   ansible.builtin.include_tasks: trilio_kubernetes_smoketest.yaml
-  tags: ['never', 'smoketest']
+  tags: ["never", "smoketest"]
   when: trilio_kubernetes_smoketest | bool
 
 - name: Cleanup Trilio For Kubernetes
   ansible.builtin.include_tasks: trilio_kubernetes_cleanup.yaml
-  tags: ['never', 'smoketest_cleanup']
+  tags: ["never", "smoketest_cleanup"]
   when:
     - trilio_kubernetes_smoketest_cleanup | bool
     - trilio_kubernetes_smoketest | bool
@@ -79,7 +85,7 @@
 
 - name: Cleanup Trilio For Kubernetes
   ansible.builtin.include_tasks: trilio_kubernetes_cleanup.yaml
-  tags: ['never', 'smoketest_cleanup']
+  tags: ["never", "smoketest_cleanup"]
   when:
     - trilio_kubernetes_smoketest_cleanup | bool
     - trilio_kubernetes_smoketest | bool

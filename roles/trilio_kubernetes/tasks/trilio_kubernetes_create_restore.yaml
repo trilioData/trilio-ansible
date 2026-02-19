@@ -4,25 +4,19 @@
 #
 # Authors: Kevin Jackson <kevin.jackson at trilio io>
 
-- name: Perform Restore
-  tags: ['restore', 'smoketest']
-  block:
-    - name: Execute Continuous Restore Preparation Tasks
-      ansible.builtin.include_tasks: "trilio_kubernetes_continuous_restore_kubeconfig.yaml"
-      when:
-        - trilio_kubernetes_create_restore | bool
-        - trilio_kubernetes_restore_type == "cr"
-        - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
+- name: Set Auth Facts
+  ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
+  tags: ['always']
 
-    - name: Execute Restore Tasks
-      ansible.builtin.include_tasks: "trilio_kubernetes_create_restore_kubeconfig.yaml"
-      when:
-        - trilio_kubernetes_create_restore | bool
-        - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
+- name: Execute Continuous Restore Preparation Tasks
+  ansible.builtin.include_tasks: "trilio_kubernetes_continuous_restore_prep.yaml"
+  tags: ['restore']
+  when:
+    - trilio_kubernetes_create_restore | bool
+    - trilio_kubernetes_restore_type == "cr"
 
-    - name: Execute Restore Tasks (OpenShift Auth)
-      ansible.builtin.include_tasks: "trilio_kubernetes_create_restore_password.yaml"
-      tags: ['backup', 'smoketest']
-      when:
-        - trilio_kubernetes_distro == 'openshift' and trilio_kubernetes_auth_type == 'password'
-        - trilio_kubernetes_create_restore | bool
+- name: Execute Restore Tasks
+  ansible.builtin.include_tasks: "trilio_kubernetes_create_restore_tasks.yaml"
+  tags: ['restore']
+  when:
+    - trilio_kubernetes_create_restore | bool

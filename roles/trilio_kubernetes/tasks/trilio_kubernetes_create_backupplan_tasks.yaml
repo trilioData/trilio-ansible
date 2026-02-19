@@ -1,0 +1,38 @@
+# code: language=ansible
+# Unified tasks for creating a Trilio for Kubernetes Backup Plan
+
+- name: Configure the backup plan in {{ trilio_kubernetes_namespace_var }}
+  ansible.builtin.template:
+    src: templates/backupplan.yaml.j2
+    dest: /tmp/{{ trilio_kubernetes_backupplan_name_var }}-backupplan.yaml
+    mode: "0600"
+  tags: ['backupplan', 'smoketest']
+
+# Create the specified backup plan in specifed namespace
+- name: Create the backup plan "{{ trilio_kubernetes_backupplan_name_var }}"
+  kubernetes.core.k8s:
+    kind: BackupPlan
+    state: present
+    namespace: "{{ trilio_kubernetes_namespace_var }}"
+    src: "/tmp/{{ trilio_kubernetes_backupplan_name_var }}-backupplan.yaml"
+    api_key: "{{ k8s_auth_api_key | default(omit) }}"
+    host: "{{ k8s_auth_host | default(omit) }}"
+    validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+  register: trilio_kubernetes_backupplan
+  tags: ['backupplan', 'smoketest']
+
+- name: Wait for the backup plan to be created "{{ trilio_kubernetes_backupplan_name_var }}"
+  kubernetes.core.k8s_info:
+    kind: BackupPlan
+    namespace: "{{ trilio_kubernetes_namespace_var }}"
+    name: "{{ trilio_kubernetes_backupplan_name_var }}"
+    api_key: "{{ k8s_auth_api_key | default(omit) }}"
+    host: "{{ k8s_auth_host | default(omit) }}"
+    validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+  register: trilio_kubernetes_backupplan_available
+  retries: "{{ trilio_kubernetes_backupplan_polling_retries }}"
+  delay: "{{ trilio_kubernetes_backupplan_polling_every_seconds }}"
+  until: trilio_kubernetes_backupplan_available.resources is defined and
+    trilio_kubernetes_backupplan_available.resources | length > 0 and
+    trilio_kubernetes_backupplan_available.resources[0].status.status == 'Available'
+  tags: ['backupplan', 'smoketest']

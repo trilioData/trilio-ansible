@@ -2,11 +2,12 @@ apiVersion: triliovault.trilio.io/v1
 kind: Restore
 metadata:
   name: {{ trilio_kubernetes_restore_name }}
+  namespace: {{ trilio_kubernetes_restore_namespace }}
 spec:
   source:
-    type: Backup
-    backup:
-      name: {{ trilio_kubernetes_restore_name }}
+    type: Snapshot
+    snapshot:
+      name: {{ trilio_kubernetes_snapshot_name }}
       namespace: {{ trilio_kubernetes_namespace }}
     restoreNamespace: {{ trilio_kubernetes_restore_namespace }}
   restoreFlags:

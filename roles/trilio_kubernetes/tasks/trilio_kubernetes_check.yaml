@@ -1,18 +1,85 @@
 # code: language=ansible
+# Tasks for checking prerequisites
 
-# Set of tasks that will check the target cluster for
-# basic set of prerequisites for Trilio
-#
-# Authors: Kevin Jackson <kevin.jackson at trilio io>
+- name: Set Auth Facts
+  ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
+  tags: ["always"]
 
-- name: Checks for Kubernetes
-  ansible.builtin.include_tasks: "trilio_kubernetes_check_kubeconfig.yaml"
-  tags: ['check']
-  when: trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
+- name: Basic Kubernetes Checks
+  tags: ["check", "smoketest"]
+  block:
+    - name: Check for kubectl
+      ansible.builtin.stat:
+        path: /usr/local/bin/kubectl
+      register: trilio_kubernetes_kubectl
 
-- name: Checks for OpenShift
-  ansible.builtin.include_tasks: "trilio_kubernetes_check_openshift.yaml"
-  tags: ['check']
-  when:
-    - trilio_kubernetes_distro == 'openshift'
-    - trilio_kubernetes_auth_type == 'password'
+- name: Basic OpenShift Checks
+  tags: ["check", "smoketest"]
+  when: trilio_kubernetes_distro == "openshift"
+  block:
+    - name: Check for oc
+      ansible.builtin.stat:
+        path: /usr/local/bin/oc
+      register: trilio_kubernetes_oc
+
+- name: Trilio for Kubernetes Prerequisite Checks
+  tags: ["check", "smoketest"]
+  block:
+    - name: Checking for Trilio License
+      kubernetes.core.k8s_info:
+        api_version: triliovault.trilio.io/v1
+        kind: License
+        namespace: "{{ trilio_kubernetes_operator_namespace }}"
+        validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+        api_key: "{{ k8s_auth_api_key | default(omit) }}"
+        host: "{{ k8s_auth_host | default(omit) }}"
+        kubeconfig: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
+      register: trilio_kubernetes_license
+
+    - name: Checking for CSI Drivers
+      kubernetes.core.k8s_info:
+        api_version: storage.k8s.io/v1
+        kind: CSIDriver
+        validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+        api_key: "{{ k8s_auth_api_key | default(omit) }}"
+        host: "{{ k8s_auth_host | default(omit) }}"
+        kubeconfig: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
+      register: trilio_kubernetes_csidrivers
+
+    - name: Checking for VolumeSnapshot CRD
+      kubernetes.core.k8s_info:
+        api_version: apiextensions.k8s.io/v1
+        kind: CustomResourceDefinition
+        name: volumesnapshot.snapshot.storage.k8s.io
+        validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+        api_key: "{{ k8s_auth_api_key | default(omit) }}"
+        host: "{{ k8s_auth_host | default(omit) }}"
+        kubeconfig: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
+      register: trilio_kubernetes_volumesnapshot
+
+    - name: Checking for VolumeSnapshotClass CRD
+      kubernetes.core.k8s_info:
+        api_version: apiextensions.k8s.io/v1
+        kind: CustomResourceDefinition
+        name: volumesnapshotclasses.snapshot.storage.k8s.io
+        validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+        api_key: "{{ k8s_auth_api_key | default(omit) }}"
+        host: "{{ k8s_auth_host | default(omit) }}"
+        kubeconfig: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
+      register: trilio_kubernetes_volumesnapshotclasses
+
+    - name: Checking for VolumeSnapshotContent CRD
+      kubernetes.core.k8s_info:
+        api_version: apiextensions.k8s.io/v1
+        kind: CustomResourceDefinition
+        name: volumesnapshotclasses.snapshot.storage.k8s.io
+        validate_certs: "{{ k8s_validate_certs | default(omit) }}"
+        api_key: "{{ k8s_auth_api_key | default(omit) }}"
+        host: "{{ k8s_auth_host | default(omit) }}"
+        kubeconfig: "{{ trilio_kubernetes_kubeconfig | default(omit) }}"
+      register: trilio_kubernetes_volumesnapshotcontent
+
+  rescue:
+    - name: Warn user on TVK errors
+      ansible.builtin.debug:
+        msg: "Unable to perform TVK checks"

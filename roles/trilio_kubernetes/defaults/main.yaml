@@ -44,7 +44,8 @@ trilio_kubernetes_suggest: true
 # Auto create NS Backup Plan
 trilio_kubernetes_autoprotect: true
 # List of NS to exclude
-trilio_kubernetes_autoprotect_exclude: ['openshift-storage', 'openshift-operators', 'trilio-system']
+trilio_kubernetes_autoprotect_exclude:
+  ["openshift-storage", "openshift-operators", "trilio-system"]
 
 # app yaml to deploy
 trilio_kubernetes_deploy_demo_app: true
@@ -96,7 +97,6 @@ trilio_kubernetes_nfs_mount_options: "nfsvers=4,rw,async"
 trilio_kubernetes_enable_browsing: "{{ trilio_kubernetes_target_enable_browsing }}"
 trilio_kubernetes_s3_threshold_capacity: "{{ trilio_kubernetes_target_threshold_capacity }}"
 
-
 #
 # Backup Plan Details
 # Note this must be relevant to the test/demo app
@@ -138,6 +138,17 @@ trilio_kubernetes_restore_delete_pvc_before_restore: false
 # Continuous Restore
 trilio_kubernetes_cr_backupplan: "{{ trilio_kubernetes_backupplan_name }}"
 trilio_kubernetes_event_target: "{{ trilio_kubernetes_target_name }}"
+
+# Snapshot Restore
+trilio_kubernetes_snapshot_name: ""
+
+# VM Transformation (Restore)
+trilio_kubernetes_scale_vm_transform: false
+trilio_kubernetes_scale_vm_transform_cores: 2
+trilio_kubernetes_scale_vm_transform_vmname: "demo-vm-1"
+
+# Namespace Selection
+trilio_kubernetes_namespace_multitext: ""
 
 # Used for migration/DR smoketest
 trilio_kubernetes_migrate: true

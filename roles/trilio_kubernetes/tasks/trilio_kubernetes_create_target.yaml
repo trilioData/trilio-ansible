@@ -18,23 +18,15 @@
 #  vars:
 #    trilio_kubernetes_namespace_var: "{{ trilio_kubernetes_namespace }}"
 
-- name: Create Target
-  ansible.builtin.include_tasks: "trilio_kubernetes_create_target_kubeconfig.yaml"
-  tags: ['target', 'smoketest']
-  when:
-    - trilio_kubernetes_create_target | bool
-    - trilio_kubernetes_distro == 'kubernetes' or trilio_kubernetes_auth_type == 'external'
-  vars:
-    trilio_kubernetes_namespace_var: "{{ item }}"
-  loop: "{{ trilio_kubernetes_backup_namespaces }}"
+- name: Set Auth Facts
+  ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
+  tags: ['always']
 
-- name: Create Target (OpenShift Token)
-  ansible.builtin.include_tasks: "trilio_kubernetes_create_target_password.yaml"
+- name: Create Target
+  ansible.builtin.include_tasks: "trilio_kubernetes_create_target_tasks.yaml"
   tags: ['target', 'smoketest']
   when:
     - trilio_kubernetes_create_target | bool
-    - trilio_kubernetes_distro == 'openshift'
-    - trilio_kubernetes_auth_type == 'password'
   vars:
     trilio_kubernetes_namespace_var: "{{ item }}"
   loop: "{{ trilio_kubernetes_backup_namespaces }}"

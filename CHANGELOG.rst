@@ -3,7 +3,15 @@ trilio.trilio_kubernetes Release Notes
 ====================================
 
 .. contents:: Topics
-v1.4.1
+v1.5.0
+======
+
+Major Changes
+-------------
+- Refactor of the trilio_kubernetes_restore tasks to simplify authentication and future development
+- Added additional options to support all S3 vendors
+
+v1.4.2
 ======
 
 Minor Changes
