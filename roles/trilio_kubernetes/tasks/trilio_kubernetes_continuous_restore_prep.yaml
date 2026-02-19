@@ -2,7 +2,7 @@
 # Tasks for Continuous Restore Preparation
 
 - name: Identify Continuous Restore Policy (Kubeconfig/External)
-  tags: ['restore']
+  tags: ["restore"]
   when:
     - trilio_kubernetes_create_restore | bool
     - trilio_kubernetes_restore_type == "cr"
@@ -30,7 +30,6 @@
       register: trilio_kubernetes_continuous_restore_policy_k8s
       ignore_errors: true
       changed_when: trilio_kubernetes_continuous_restore_policy_k8s.rc != 0
-
 
     - name: Identify Last Consistent Set in {{ trilio_kubernetes_continuous_restore_policy_k8s.stdout }}
       when: trilio_kubernetes_continuous_restore_policy_k8s.stdout | trim | length > 0
@@ -70,7 +69,7 @@
       changed_when: trilio_kubernetes_continuous_restore_pvc_k8s.rc != 0
 
 - name: Identify Continuous Restore Policy (OpenShift Password)
-  tags: ['restore']
+  tags: ["restore"]
   when:
     - trilio_kubernetes_create_restore | bool
     - trilio_kubernetes_restore_type == "cr"
@@ -126,7 +125,7 @@
       changed_when: trilio_kubernetes_continuous_restore_pvc_oc.rc != 0
 
 - name: Set Continuous Restore Facts
-  tags: ['restore']
+  tags: ["restore"]
   when:
     - trilio_kubernetes_create_restore | bool
     - trilio_kubernetes_restore_type == "cr"
