@@ -48,3 +48,5 @@ password_file
 overrides/
 .vscode/
 get-pip.py
+reproduce_issue.py
+*.lic
