@@ -9,7 +9,9 @@
 
 - name: Set restore name
   ansible.builtin.set_fact:
-    trilio_kubernetes_restore_name: "{{ (trilio_kubernetes_snapshot_name if trilio_kubernetes_restore_type == 'snapshot' else trilio_kubernetes_backupplan_name) }}-{{ ansible_date_time.date }}-{{ ansible_date_time.epoch }}"
+    trilio_kubernetes_restore_name: "{{ _base_name }}-{{ ansible_date_time.date }}-{{ ansible_date_time.epoch }}"
+  vars:
+    _base_name: "{{ trilio_kubernetes_snapshot_name if trilio_kubernetes_restore_type == 'snapshot' else trilio_kubernetes_backupplan_name }}"
   tags: ["restore", "smoketest"]
 
 - name: Configure the restore from {{ trilio_kubernetes_restore_type }}
