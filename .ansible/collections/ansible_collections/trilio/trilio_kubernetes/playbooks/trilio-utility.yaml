@@ -13,6 +13,9 @@
 # A combination of the above can be used
 # e.g. --tags "auth,check,namespace,target,backupplan"
 #
+# Specifying no tags will run through the configuration in trilio_kubernetes-config.yaml
+# executing backups and creating targets as specified, etc.
+#
 # Deployment Test: Smoketest
 # - perform a smoketest of all actions backup/recovery of a demo app with checks of the environment
 

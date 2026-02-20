@@ -414,6 +414,13 @@
    "format": 1
   },
   {
+   "name": "playbooks/trilio-utility-local.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "66a66efb8ad10d96ff51fafcefae68c2c78c98cbb5686e1170540fd98c47b1fe",
+   "format": 1
+  },
+  {
    "name": "playbooks/trilio-utility.yaml",
    "ftype": "file",
    "chksum_type": "sha256",
@@ -445,7 +452,7 @@
    "name": ".gitignore",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "2553fd1caaf6e72c65d11b90fe15578687d0a41c9c4f3612b3d9e6f03e9129c7",
+   "chksum_sha256": "7e495671a52b371dc61f397527349349ee458fda1e6a97ec3d034837b4071080",
    "format": 1
   },
   {
