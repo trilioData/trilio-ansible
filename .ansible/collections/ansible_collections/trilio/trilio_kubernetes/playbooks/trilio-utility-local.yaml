@@ -25,7 +25,8 @@
 ##############################################################
 #
 
-- name: Trilio for Kubernetes Ansible Utility
+- name: Trilio for Kubernetes Ansible Utility # noqa: role-name[path]
   hosts: localhost
   roles:
-    - trilio.trilio_kubernetes.trilio_kubernetes
+    # Local Relative Path to the role
+    - ../roles/trilio_kubernetes

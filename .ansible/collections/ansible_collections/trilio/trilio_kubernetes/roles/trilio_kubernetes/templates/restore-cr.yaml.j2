@@ -1,0 +1,42 @@
+apiVersion: triliovault.trilio.io/v1
+kind: Restore
+metadata:
+  name: {{ trilio_kubernetes_restore_name }}
+  namespace: {{ trilio_kubernetes_restore_namespace }}
+spec:
+  restoreFlags:
+    onlyData: {{ trilio_kubernetes_restore_data_only }}
+    skipIfAlreadyExists: true
+  source:
+    consistentSet:
+      apiVersion: triliovault.trilio.io/v1
+      kind: ConsistentSet
+      name: {{ trilio_kubernetes_continuous_restore_cs_name }}
+    location: {{ trilio_kubernetes_location_id }}
+    target:
+      apiVersion: triliovault.trilio.io/v1
+      kind: Target
+      name: {{ trilio_kubernetes_event_target }}
+      namespace: {{ trilio_kubernetes_restore_namespace }}
+    type: ConsistentSet
+{% if trilio_kubernetes_scale_vm_transform %}
+  transformComponents:
+    custom:
+    - jsonPatches:
+      - op: replace
+        path: /spec/template/spec/domain/cpu/cores
+        value: {{ trilio_kubernetes_scale_vm_transform_cores }}
+      resources:
+        groupVersionKind:
+          group: kubevirt.io
+          kind: VirtualMachine
+          version: v1
+        objects:
+        - {{ trilio_kubernetes_scale_vm_transform_vmname }}
+      transformName: scale-cores
+{% endif %}
+  excludeResources:
+  - groupVersionKind:
+      group: "operator.tekton.dev"
+      version: "v1alpha1"
+      kind: "TektonConfig"

@@ -1,0 +1,21 @@
+# code: language=ansible
+
+# Set of tasks that will authenticate to OpenShift
+# User can use kubeconfig or user/pass
+# If a user is authenticating using username/password:
+# Create an encrypted vault file with the following format
+# trilio_kubernetes_username:
+# trilio_kubernetes_password:
+# Pass this encrypted vault file on the ansible command line
+#
+# Authors: Kevin Jackson <kevin.jackson at trilio io>
+
+- name: Authenticate to Kubernetes
+  ansible.builtin.include_tasks: "trilio_kubernetes_auth_{{ trilio_kubernetes_auth_type }}.yaml"
+  tags: ['always']
+  when: trilio_kubernetes_distro == 'kubernetes'
+
+- name: Authenticate to OpenShift
+  ansible.builtin.include_tasks: "trilio_kubernetes_auth_openshift.yaml"
+  tags: ['always']
+  when: trilio_kubernetes_distro == 'openshift'

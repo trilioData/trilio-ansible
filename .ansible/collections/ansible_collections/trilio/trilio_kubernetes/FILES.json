@@ -1,0 +1,530 @@
+{
+ "files": [
+  {
+   "name": ".",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "get-pip.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9cc01665956d22b3bf057ae8287b035827bfd895da235bcea200ab3b811790b6",
+   "format": 1
+  },
+  {
+   "name": "LICENSE",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "format": 1
+  },
+  {
+   "name": "requirements.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8a0defff4cdf782f42820bd3f76c4428fc299dc5a5d8a361a8f10c6b1c49adfe",
+   "format": 1
+  },
+  {
+   "name": "plugins",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/README.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "aaaa4aacb415230923b08dce158d6a5248d1349de243a25b4aba2f636e5f2144",
+   "format": 1
+  },
+  {
+   "name": "replace_vars.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3064db1482521861159c3d99b8bcaa77f1bf1d6bcf868e74d2a348c0a618b37e",
+   "format": 1
+  },
+  {
+   "name": "tests",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "meta",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "meta/execution-environment.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ec1875745063d448e6d9ad63042abac6f55d1e627f1237303b1944cec7c38bdc",
+   "format": 1
+  },
+  {
+   "name": "meta/runtime.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "836ef406129a51ee3eb8c45d050c660962754c6d286a1285af8139571604ff7e",
+   "format": 1
+  },
+  {
+   "name": "roles",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/vars",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/vars/defaults.main.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7c4bb793f82982a888cec1203d4d5a69b84fb07ac774c487cdb156afb0ac9eee",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_create_target.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6f8489120d11fcf7cd97ef96556647005704fb5dcc5e2356281cc487aa84d230",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_create_backup.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0f550236f19db5390cc31d549df44c9f89d4459fb5ae5e08b71e516c14b96ade",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_smoketest.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "fce933c361adb026a9f2ebf683ecf305a8487b1eb24623ac995367509b6920c3",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_delay.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "43d8b1f990dcf935e13ee401f898b9b8b8b18675a42d926bee1f9364dd112baa",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/reproduce_issue.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "93040a905df885762d194f15e306918cbb263dab3e6611e15f23523d9bb30de8",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_cleanup.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6b865c110ad6eeee4297dd0ccb98272001fbf09ab55ced9ac69965d6ea5c53fd",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_check.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "284f6e37f99ea1031017fd443a7c0d74670e5a9f55086bf5a5c256c726517896",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_continuous_restore_prep.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "71025a9b5c2eafb3444eaa28140f1e1fcffa0a8c8d6ad05062e1a1e3d5a05a2a",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_auth_password.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f65f24ef1f4050f73f6137abe7a3f6b4c09a88b868e2755fe467a6b5cfaff8dd",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_create_ns_tasks.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "be23b3ad9612062c31143343c9af05fa2972f4d56001e5f319d237eb1a06ff9a",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/main.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "901da66f185cd5334b7ce2c9dad0f0ff9abce6c547547529f790336badfe3a86",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_create_restore_tasks.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "158733ceae9aa2a1b0ddfae8a706efb3fd8c392e11ddf89d24e919911969c7c8",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_create_backupplan.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "105213b4cef72cd1d9257e35fd4f02ed23026bf966089df02edfaa723e5d51c3",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_create_backupplan_tasks.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "31edf9ded769d54cc8e39b398dd883462a34c8560063c9408381c27a7f915ce1",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_create_ns.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "2a623cda572459e7e39bc7aa6d0fd7bf0f73f3dc1cf622b6cd3e74dd6c3ee3e8",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_create_target_tasks.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "c1879b4f8cf219266be60f6d23fb55bba50367e4e8dca001ba04b6926af5fef4",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_create_restore.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "de1bbf190839438a5fa16a4f3375f7ffe962e38db34a45674d5d97fce2bc880e",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_auth.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "315eb986278c41fae8ec7b8fc61cdaa8c8318703099f538a8a90939a52bbab5b",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_create_secret_tasks.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "da2cc94ffb118de7c3297eccbabc2a4319fc516bb5eba4310ab9cd49c3c74a3c",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_common_auth.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9dbd7e54befd03b06d3f37ea9e056b56c68b270a66884399f059e71478f2f732",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_suggest.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a4b3508d0e87fd5fbdcaf039c128606f8b03a3da2b2bbbbd94ad4fc85ceb68bf",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_create_backup_tasks.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d96be5ae852d1524595162b73743a24017b066632125ab244b5be3a587c343d8",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_create_secret.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "2a72d5f8c2ab4e278e80147200d2dee27617f25336c10224bbf69dfb95c3fe9c",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_deploy_app.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "05ca6602ccac017e3486286e57385066e208f4b46a8c03356eccd57b705dfa50",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_auth_kubeconfig.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e0ed5313ef46bc3c1e65fc207ad6e9fe7a6a593a24398e31a12a63655e1a551d",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/tasks/trilio_kubernetes_auth_openshift.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8a6ada17fb252f38659dbd946aca0741539baca44f569c244df1b89ab24e1d28",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/README.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "786c15b7b41c3cbee883a2c1b54f170ce996b0767bc2910c150d801a1c2e104e",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/defaults",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/defaults/main.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "39b1b6e12102da0dfed8d467842a5af1f44879743e282858c08a0c3b3ac8f027",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/defaults/backup-config.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f66aa7c89ec9cc458bf7b3f2347456d787efe30b617e350551d1652c2378186c",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/defaults/restore-config.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1b006d7d0bbdd20d98c49ffecc2473935786d4f2a516fcdb15b45581f497091c",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/templates",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/templates/restore-location.yaml.j2",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "de2e20201ddbac31d4d3bffb0af3e5de784c8a37b601358862d650aa8cb53121",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/templates/restore-backup.yaml.j2",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ba809445c84f32df1f33ffd885ab61066ddc9e11633748a47c28aca8a5d47647",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/templates/backupplan.yaml.j2",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "cf7fe1376636b6d93165f40682b7b0faad41a20564e40c83a3c8e601c987f93f",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/templates/backup.yaml.j2",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "bdad50b8abc204dbf419852601f1c1769a0eabcab0b807089c3a06e74326d1c2",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/templates/scc.yaml.j2",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "207bf1d7de3c7957510c711015987da22c5e749d3e6922425cdb22d7aa5c923f",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/templates/secrets.yaml.j2",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "858b8adcfa0888617e9a745d200dc83e520487936fc9c7f901e00fde9516740b",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/templates/target.yaml.j2",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e3d6814abb9e30a5cdc629aa863fa9bf374054f64e3292f9a34336464d24a648",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/templates/restore-backupplan.yaml.j2",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "127c19a52be57dfeae1b3de94174f45db74656206405ea5f7e9232e61a04d832",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/templates/restore-snapshot.yaml.j2",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9f6ba8e49f283b916185469de642cd01b3877377d0603bbaa15b54cb02ef1f11",
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/templates/restore-cr.yaml.j2",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "50cd8b6627f4622ab8393d26449633464bb59b8e44eff3b062bfc4a76faeb9db",
+   "format": 1
+  },
+  {
+   "name": "playbooks",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "playbooks/trilio-utility-local.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "66a66efb8ad10d96ff51fafcefae68c2c78c98cbb5686e1170540fd98c47b1fe",
+   "format": 1
+  },
+  {
+   "name": "playbooks/trilio-utility.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "27de803fada40d5bf82c0fdb7caac5566958f67efc54fc8ef6bfbc1d945bb6fb",
+   "format": 1
+  },
+  {
+   "name": "docs",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "NOTICE",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d4ed4441ec4e03ef04f8c5b15713300953c4b2415bafcc65f76f14872d5475a0",
+   "format": 1
+  },
+  {
+   "name": "README.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f300f85ea25b2fa54672ad4d6954f7ca1b96e36587320177043d9a441f547cff",
+   "format": 1
+  },
+  {
+   "name": ".gitignore",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7e495671a52b371dc61f397527349349ee458fda1e6a97ec3d034837b4071080",
+   "format": 1
+  },
+  {
+   "name": ".ansible",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": ".ansible/.lock",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "format": 1
+  },
+  {
+   "name": ".ansible/roles",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": ".ansible/modules",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": ".ansible/collections",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": ".ansible/collections/ansible_collections",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": ".ansible/collections/ansible_collections/trilio",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "CHANGELOG.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a09a9be22665764efd08b59b12642010f6371968d3ebbda3a8219e7d2594992e",
+   "format": 1
+  },
+  {
+   "name": ".vscode",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": ".vscode/settings.json",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "20514d71a00327abc7af31a9e9ae33c944f7acc59d9dfc52bef1061ed21e9274",
+   "format": 1
+  }
+ ],
+ "format": 1
+}

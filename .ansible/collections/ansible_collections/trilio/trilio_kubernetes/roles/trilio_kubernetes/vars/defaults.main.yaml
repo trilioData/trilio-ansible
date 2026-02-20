@@ -1,0 +1,5 @@
+trilio_kubernetes_auth: true
+trilio_kubernetes_check: true
+trilio_kubernetes_smoketest: false
+trilio_kubernetes_create_target: false
+trilio_kubernetes_deploy_demo_app: false

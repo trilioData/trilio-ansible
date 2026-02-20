@@ -1,0 +1,158 @@
+# code: language=ansible
+
+# Trilio For Kubernetes
+# Authors: Kevin Jackson <kevin.jackson at trilio io>
+#
+
+# Specify environment/auth details - username/pass (in a vault specified on cli)
+# Username/Pass
+# Note: 'openshift' assumes kubectl and oc tools installed
+trilio_kubernetes_distro: openshift # kubernetes | openshift
+trilio_kubernetes_auth_type: password # password | kubeconfig | external
+# Kubeconfig
+trilio_kubernetes_kubeconfig: # path to kubeconfig file if kube_auth_type is 'kubeconfig'
+
+# Trilio Operator
+trilio_kubernetes_operator_namespace: trilio-system
+
+# Always authenticate unless you have a reason to skip this
+trilio_kubernetes_auth: true
+# Performs a check of the license and other prequisites
+trilio_kubernetes_check: true
+# Uses the values in the config file to create a demo app, target, backuppplan, backup and restore.
+# Set this value for first installation test
+# Specify whether to auto clean the deployment/objects after smoketest
+#
+
+# Use the CLI to poll for running tasks
+trilio_kubernetes_cli: true
+
+# WARNING: THIS DELETES THINGS IN THE trilio_kubernetes_namespace and trilio_kubernetes_restore_namespace!
+#
+# - ALL BACKUPS IN trilio_kubernetes_namespace and trilio_kubernetes_restore_namespace
+# - ALL DEPLOYMENTS in trilio_kubernetes_namespace and trilio_kubernetes_restore_namespace
+# - THE NAMESPACE trilio_kubernetes_namespace and trilio_kubernetes_restore_namespace
+#
+# WARNING. SEE ABOVE. WARNING.
+# Both trilio_kubernetes_smoketest and trilio_kubernetes_smoketest_cleanup must be true to cleanup
+#
+trilio_kubernetes_smoketest: true
+trilio_kubernetes_smoketest_cleanup: true
+
+# Search for suggested NS to backup
+trilio_kubernetes_suggest: true
+# Auto create NS Backup Plan
+trilio_kubernetes_autoprotect: true
+# List of NS to exclude
+trilio_kubernetes_autoprotect_exclude:
+  ["openshift-storage", "openshift-operators", "trilio-system"]
+
+# app yaml to deploy
+trilio_kubernetes_deploy_demo_app: true
+trilio_kubernetes_scc_policy_anyuid_to_ns: true
+trilio_kubernetes_rbac_service_account: default
+trilio_kubernetes_rbac_uid_to_use: "system:openshift:scc:anyuid"
+trilio_kubernetes_create_namespace: true
+trilio_kubernetes_namespace: smoketest1
+trilio_kubernetes_demo_app_yaml: https://raw.githubusercontent.com/uksysadmin/trilio-ansible/main/files/demo-mysql-app.yaml
+
+# Namespace Information
+#
+# List of namespaces where backups will be created. Ensure in [] list or
+# on seperate lines, e.g.
+# trilio_kubernetes_backup_namespaces: [ mynamespace1 ]
+# or
+# trilio_kubernetes_backup_namespaces: [ mynamespace1, mynamespace2 ]
+# or
+# trilio_kubernetes_backup_namespaces:
+#   - mynamespace1
+#   - mynamespace2
+
+trilio_kubernetes_backup_namespaces: ["{{ trilio_kubernetes_namespace }}"]
+
+# Secrets (if using S3)
+trilio_kubernetes_create_secret: true
+trilio_kubernetes_secret_name: s3-access-secret
+
+#
+# Backup Target
+#
+trilio_kubernetes_create_target: true
+trilio_kubernetes_target_type: S3 # or NFS
+trilio_kubernetes_target_name: smoketest-target
+trilio_kubernetes_target_enable_browsing: false
+trilio_kubernetes_target_polling_retries: 10
+trilio_kubernetes_target_polling_every_seconds: 10
+trilio_kubernetes_target_threshold_capacity: 100Gi
+
+trilio_kubernetes_s3_vendor: AWS
+trilio_kubernetes_s3_region: us-east-1
+trilio_kubernetes_s3_url: "https://s3.{{ trilio_kubernetes_s3_region }}.amazonaws.com"
+trilio_kubernetes_s3_bucket_name: tvk-migration-demo1
+
+trilio_kubernetes_nfs_export: "172.31.3.2/mnt/sa"
+trilio_kubernetes_nfs_mount_options: "nfsvers=4,rw,async"
+
+# Deprecated
+trilio_kubernetes_enable_browsing: "{{ trilio_kubernetes_target_enable_browsing }}"
+trilio_kubernetes_s3_threshold_capacity: "{{ trilio_kubernetes_target_threshold_capacity }}"
+
+#
+# Backup Plan Details
+# Note this must be relevant to the test/demo app
+#
+trilio_kubernetes_create_backupplan: true
+trilio_kubernetes_backupplan_override: false
+trilio_kubernetes_backupplan_name: smoketest-app-backupplan
+trilio_kubernetes_backupplan_type: ns # ns|label|operator
+trilio_kubernetes_backup_match_label: "app: k8s-demo-app" # ignored for ns backup type
+trilio_kubernetes_backupplan_polling_retries: 10
+trilio_kubernetes_backupplan_polling_every_seconds: 10
+
+# Red Hat OLM Operator Backups
+trilio_kubernetes_operator_subscription_namespace:
+trilio_kubernetes_operator_subscription:
+trilio_kubernetes_operator_group:
+trilio_kubernetes_operator_version:
+trilio_kubernetes_operator_kinds:
+#
+# Perform Backup
+trilio_kubernetes_create_backup: true
+trilio_kubernetes_backup_prefix: "{{ trilio_kubernetes_backupplan_name }}"
+trilio_kubernetes_backup_type: Full # Full | Incremental
+trilio_kubernetes_backup_wait: true
+trilio_kubernetes_backup_polling_retries: 10
+trilio_kubernetes_backup_polling_every_seconds: 30
+trilio_kubernetes_backup_batch_size: 1
+
+# Perform Restore
+trilio_kubernetes_restore_type: backupplan # backup | backupplan | location | cr
+trilio_kubernetes_create_restore: true
+trilio_kubernetes_restore_namespace: smoketest-restore
+trilio_kubernetes_restore_polling_retries: 10
+trilio_kubernetes_restore_polling_every_seconds: 60
+trilio_kubernetes_restore_data_only: false
+# Currently only for CR restores
+trilio_kubernetes_restore_delete_pvc_before_restore: false
+
+# Continuous Restore
+trilio_kubernetes_cr_backupplan: "{{ trilio_kubernetes_backupplan_name }}"
+trilio_kubernetes_event_target: "{{ trilio_kubernetes_target_name }}"
+
+# Snapshot Restore
+trilio_kubernetes_snapshot_name: ""
+
+# VM Transformation (Restore)
+trilio_kubernetes_scale_vm_transform: false
+trilio_kubernetes_scale_vm_transform_cores: 2
+trilio_kubernetes_scale_vm_transform_vmname: "demo-vm-1"
+
+# Namespace Selection
+trilio_kubernetes_namespace_multitext: ""
+
+# Used for migration/DR smoketest
+trilio_kubernetes_migrate: true
+trilio_kubernetes_backupplan_skip_images: true
+trilio_kubernetes_migrate_namespace: migration-restore
+trilio_kubernetes_migrate_backupplan: "{{ trilio_kubernetes_backupplan_name }}" # if specified, uses last known backup
+trilio_kubernetes_location_id: # can specify which backup to restore to if known
