@@ -25,4 +25,5 @@
 - name: Trilio for Kubernetes Ansible Utility
   hosts: localhost
   roles:
-    - trilio.trilio_kubernetes.trilio_kubernetes
+    # Local Relative Path to the role
+    - ../trilio.trilio_kubernetes.trilio_kubernetes
