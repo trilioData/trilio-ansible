@@ -1,0 +1,43 @@
+{
+ "collection_info": {
+  "namespace": "trilio",
+  "name": "trilio_kubernetes",
+  "version": "1.5.0",
+  "authors": [
+   "Kevin Jackson <kevin.jackson@trilio.io>",
+   "Rodolfo Casas <rodolfo.casas@trilio.io>"
+  ],
+  "readme": "README.md",
+  "tags": [
+   "storage",
+   "security",
+   "data",
+   "dataprotection",
+   "backup",
+   "restore",
+   "recovery",
+   "disaster",
+   "kubernetes",
+   "pvc",
+   "migration"
+  ],
+  "description": "Collection for using Ansible to orchestrate backup, recovery and migration of Kubernetes applications and data",
+  "license": [],
+  "license_file": "LICENSE",
+  "dependencies": {
+   "kubernetes.core": ">=2.2.0"
+  },
+  "repository": "https://github.com/trilioData/trilio-ansible",
+  "documentation": "https://docs.trilio.io/kubernetes",
+  "homepage": "https://trilio.io/",
+  "issues": "https://github.com/trilioData/trilio-ansible/issues"
+ },
+ "file_manifest_file": {
+  "name": "FILES.json",
+  "ftype": "file",
+  "chksum_type": "sha256",
+  "chksum_sha256": "ad32e2b1764684eada4d68291c011370249ef58aaf597fd680f04e63a4491daa",
+  "format": 1
+ },
+ "format": 1
+}

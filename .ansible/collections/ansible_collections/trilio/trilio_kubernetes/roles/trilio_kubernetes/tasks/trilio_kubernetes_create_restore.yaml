@@ -1,0 +1,22 @@
+# code: language=ansible
+
+# Set of tasks for creating performing a Trilio for Kubernetes Restore
+#
+# Authors: Kevin Jackson <kevin.jackson at trilio io>
+
+- name: Set Auth Facts
+  ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
+  tags: ['always']
+
+- name: Execute Continuous Restore Preparation Tasks
+  ansible.builtin.include_tasks: "trilio_kubernetes_continuous_restore_prep.yaml"
+  tags: ['restore']
+  when:
+    - trilio_kubernetes_create_restore | bool
+    - trilio_kubernetes_restore_type == "cr"
+
+- name: Execute Restore Tasks
+  ansible.builtin.include_tasks: "trilio_kubernetes_create_restore_tasks.yaml"
+  tags: ['restore']
+  when:
+    - trilio_kubernetes_create_restore | bool

@@ -1,0 +1,14 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  creationTimestamp: null
+  name: {{ trilio_kubernetes_rbac_uid_to_use }}
+  namespace: {{ trilio_kubernetes_namespace_var }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ trilio_kubernetes_rbac_uid_to_use }}
+subjects:
+- kind: ServiceAccount
+  name: {{ trilio_kubernetes_rbac_service_account }}
+  namespace: {{ trilio_kubernetes_namespace_var }}

@@ -50,4 +50,3 @@ overrides/
 get-pip.py
 reproduce_issue.py
 *.lic
-replace_vars.py

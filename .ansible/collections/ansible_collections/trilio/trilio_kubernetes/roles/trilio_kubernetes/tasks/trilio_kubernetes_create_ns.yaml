@@ -1,0 +1,18 @@
+# code: language=ansible
+
+# Set of tasks for creating a Trilio for Kubernetes Backup
+#
+# Authors: Kevin Jackson <kevin.jackson at trilio io>
+
+- name: Set Auth Facts
+  ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
+  tags: ['always']
+
+- name: Create Namespace
+  tags: ['namespace', 'ns', 'smoketest']
+  ansible.builtin.include_tasks: "trilio_kubernetes_create_ns_tasks.yaml"
+  when:
+    - trilio_kubernetes_create_namespace | bool
+  vars:
+    trilio_kubernetes_namespace_var: "{{ item }}"
+  loop: "{{ trilio_kubernetes_backup_namespaces }}"

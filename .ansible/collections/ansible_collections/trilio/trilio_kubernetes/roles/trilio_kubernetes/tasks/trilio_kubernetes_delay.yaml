@@ -1,0 +1,9 @@
+# code: language=ansible
+# Optional delay task for Trilio for Kubernetes workflows
+# Controlled by trilio_kubernetes_delay_enabled and trilio_kubernetes_delay_seconds
+
+- name: Delay for specified time if enabled
+  ansible.builtin.pause:
+    seconds: "{{ trilio_kubernetes_delay_seconds }}"
+  when: trilio_kubernetes_delay_enabled | bool
+  tags: ["delay"]

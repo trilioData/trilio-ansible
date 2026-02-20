@@ -1,0 +1,51 @@
+# code: language=ansible
+
+# Set of tasks that will check a Kubernetes cluster for
+# - Any NS with a PVC
+# - If trilio_kubernetes_autoprotect: true - create backupplan and
+# - perform backup of each NS
+#
+# - So two modes of use:
+# - recommend (--tags "search" or "suggest") and auto protect (--tags "autoprotect")
+#
+# Authors: Kevin Jackson <kevin.jackson at trilio io>
+
+- name: Trilio for Kubernetes Auto Protect Routine
+  tags: ['suggest', 'search', 'autoprotect', 'smoketest']
+  block:
+    - name: Checking Namespaces for PVCs
+      kubernetes.core.k8s_info:
+        api_key: "{{ trilio_kubernetes_auth_results.k8s_auth.api_key }}"
+        kind: PersistentVolumeClaim
+        validate_certs: false
+      register: trilio_kubernetes_pvc_list
+      when: trilio_kubernetes_auth_type == 'password'
+
+    - name: Checking Namespaces for PVCs
+      kubernetes.core.k8s_info:
+        kind: PersistentVolumeClaim
+        validate_certs: false
+      register: trilio_kubernetes_pvc_list
+      when: trilio_kubernetes_auth_type == 'kubeconfig'
+
+    - name: Register Namespaces with PVCs
+      ansible.builtin.set_fact:
+        trilio_kubernetes_found_ns_list: "{{ trilio_kubernetes_pvc_list | json_query('resources[*].metadata.namespace') }}"
+
+    - name: Remove excluded Namespaces from suggestion
+      ansible.builtin.set_fact:
+        trilio_kubernetes_recommended_ns_list: "{{ trilio_kubernetes_found_ns_list | difference(trilio_kubernetes_autoprotect_exclude) }}"
+
+    - name: Protect NS Listed
+      ansible.builtin.debug:
+        msg: "{{ trilio_kubernetes_recommended_ns_list }}"
+
+#    - name: Calling backup plan creation task
+#      tags: ['autoprotect']
+#      ansible.builtin.include_tasks: trilio_kubernetes_create_backupplan.yaml
+#      vars:
+#        trilio_kubernetes_namespace: "{{ item }}"
+#        trilio_kubernetes_suggest_autoprotect: true
+#        trilio_kubernetes_backupplan_name: "{{ trilio_kubernetes_namespace }}-autoprotect"
+#      with_items: "{{ recommended_ns_list }}"
+#      when: trilio_kubernetes_autoprotect | bool

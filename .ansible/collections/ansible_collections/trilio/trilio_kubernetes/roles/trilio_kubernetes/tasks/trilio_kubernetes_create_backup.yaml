@@ -1,0 +1,38 @@
+# code: language=ansible
+
+# Set of tasks for creating a Trilio for Kubernetes Backup
+#
+# Authors: Kevin Jackson <kevin.jackson at trilio io>
+- name: Set Explicit Backup Plan Name To Use
+  when: trilio_kubernetes_backupplan_override | bool
+  ansible.builtin.set_fact:
+    trilio_kubernetes_backup_name_var: "{{ trilio_kubernetes_backupplan_name }}"
+  tags: ["backup", "smoketest"]
+
+- name: Set Auth Facts
+  ansible.builtin.include_tasks: "trilio_kubernetes_common_auth.yaml"
+  tags: ["always"]
+
+- name: Normalize backup namespaces list
+  ansible.builtin.set_fact:
+    trilio_kubernetes_backup_namespaces_list: >-
+      {{ trilio_kubernetes_backup_namespaces | from_yaml
+      if trilio_kubernetes_backup_namespaces is string
+      else trilio_kubernetes_backup_namespaces }}
+  tags: ["backup", "smoketest"]
+
+- name: Create Backup
+  ansible.builtin.include_tasks: "trilio_kubernetes_create_backup_tasks.yaml"
+  tags: ["backup", "smoketest"]
+  vars:
+    trilio_kubernetes_namespace_var: "{{ item }}"
+    trilio_kubernetes_backupplan_name_var: >-
+      {{ trilio_kubernetes_backupplan_name
+         if (trilio_kubernetes_backupplan_override | bool)
+         else (item ~ '-' ~ trilio_kubernetes_backupplan_type) }}
+    trilio_kubernetes_backup_timestamp: "{{ ansible_date_time.date }}-{{ ansible_date_time.epoch }}"
+  loop: >-
+    {{ trilio_kubernetes_backup_namespaces_list | batch(trilio_kubernetes_backup_batch_size
+    | int) }}
+  loop_control:
+    loop_var: namespaces_batch

@@ -1,0 +1,78 @@
+# code: language=ansible
+
+# Set of tasks for cleaning up after a smoketest run
+# Can also be used to clean up various TVK objects
+#
+# WARNING: THIS DELETES OBJECTS AND NAMESPACES SPECIFIED
+#
+# Authors: Kevin Jackson <kevin.jackson at trilio io>
+
+- name: Execute Cleanup Tasks
+  tags: ['smoketest_cleanup', 'smoketest']
+  when:
+    - trilio_kubernetes_smoketest_cleanup | bool
+    - trilio_kubernetes_smoketest | bool
+  block:
+    - name: Collecting all Deployments from {{ trilio_kubernetes_namespace }}
+      kubernetes.core.k8s_info:
+        api_key: "{{ trilio_kubernetes_auth_results.k8s_auth.api_key }}"
+        kind: Deployment
+        namespace: "{{ trilio_kubernetes_namespace }}"
+        validate_certs: false
+      register: trilio_kubernetes_deployment_list
+
+    - name: Removing all Deployments from {{ trilio_kubernetes_namespace }}
+      kubernetes.core.k8s:
+        api_key: "{{ trilio_kubernetes_auth_results.k8s_auth.api_key }}"
+        state: absent
+        namespace: "{{ trilio_kubernetes_namespace }}"
+        validate_certs: false
+        kind: Deployment
+        name: "{{ item }}"
+        wait: true
+      register: trilio_kubernetes_cleanup_deployment
+      with_items: "{{ deployment_list | json_query('resources[*].metadata.name') }}"
+
+    - name: Collecting all Backups created in {{ trilio_kubernetes_namespace }}
+      kubernetes.core.k8s_info:
+        api_key: "{{ trilio_kubernetes_auth_results.k8s_auth.api_key }}"
+        api_version: triliovault.trilio.io/v1
+        kind: Backup
+        namespace: "{{ trilio_kubernetes_namespace }}"
+        validate_certs: false
+      register: trilio_kubernetes_backup_list
+
+    - name: List of Backups that will be removed
+      ansible.builtin.debug:
+        msg: "backup_list: {{ backup_list | json_query('resources[*].metadata.name') }}"
+
+    - name: Removing all Backups from {{ trilio_kubernetes_namespace }}
+      kubernetes.core.k8s:
+        api_key: "{{ trilio_kubernetes_auth_results.k8s_auth.api_key }}"
+        api_version: triliovault.trilio.io/v1
+        state: absent
+        namespace: "{{ trilio_kubernetes_namespace }}"
+        validate_certs: false
+        kind: Backup
+        name: "{{ item }}"
+        wait: true
+      register: trilio_kubernetes_cleanup_backups
+      with_items: "{{ backup_list | json_query('resources[*].metadata.name') }}"
+
+    - name: Remove namespace {{ trilio_kubernetes_namespace }}
+      kubernetes.core.k8s:
+        name: "{{ trilio_kubernetes_namespace }}"
+        api_version: v1
+        api_key: "{{ trilio_kubernetes_auth_results.k8s_auth.api_key }}"
+        kind: Namespace
+        validate_certs: false
+        state: absent
+
+    - name: Remove restore namespace {{ trilio_kubernetes_restore_namespace }}
+      kubernetes.core.k8s:
+        name: "{{ trilio_kubernetes_restore_namespace }}"
+        api_version: v1
+        api_key: "{{ trilio_kubernetes_auth_results.k8s_auth.api_key }}"
+        kind: Namespace
+        validate_certs: false
+        state: absent
