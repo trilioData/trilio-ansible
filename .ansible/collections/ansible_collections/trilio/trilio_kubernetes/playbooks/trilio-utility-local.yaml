@@ -26,4 +26,4 @@
   hosts: localhost
   roles:
     # Local Relative Path to the role
-    - ../trilio.trilio_kubernetes.trilio_kubernetes
+    - ../roles/trilio_kubernetes
