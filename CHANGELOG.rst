@@ -8,7 +8,8 @@ v1.5.0
 
 Major Changes
 -------------
-- Refactor of the trilio_kubernetes_restore tasks to simplify authentication and future development
+- Big refactor of the trilio_kubernetes role to make it more maintainable and future proof
+- New features such as transformations for VM based backups
 - Added additional options to support all S3 vendors
 
 v1.4.2

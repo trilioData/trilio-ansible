@@ -295,6 +295,20 @@
    "format": 1
   },
   {
+   "name": "roles/trilio_kubernetes/meta",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "roles/trilio_kubernetes/meta/main.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "bb5bbaac7e77f38197d858791435834fb1dc154574680ec898676a66e9de46a3",
+   "format": 1
+  },
+  {
    "name": "roles/trilio_kubernetes/README.md",
    "ftype": "file",
    "chksum_type": "sha256",
